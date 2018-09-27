@@ -1,0 +1,8 @@
+*.suo
+*.user
+*.exe
+*.pdb
+
+/.vs/Practicing/v15
+/Debug
+/Practicing/Debug
