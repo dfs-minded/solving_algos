@@ -190,6 +190,40 @@ bool isPalindrome(ListNode* head) {
 }
 
 
+// Fibonacci Matrix Solution
+using Matrix = vector<vector<int>>;
+
+Matrix multiply(Matrix A, Matrix B) {
+	Matrix C(2, vector<int>(2));
+
+	C[0][0] = A[0][0] * B[0][0] + A[0][1] * B[1][0];
+	C[0][1] = A[0][0] * B[0][1] + A[0][1] * B[1][1];
+	C[1][0] = A[1][0] * B[0][0] + A[1][1] * B[1][0];
+	C[1][1] = A[1][0] * B[0][1] + A[1][1] * B[1][1];
+
+	return C;
+}
+
+Matrix fastPow(Matrix A, int p) {
+	if (p == 0) return { { 1, 0 },{ 0, 1 } };
+
+	if (p % 2 == 0) {
+		auto M = fastPow(A, p / 2);
+		return multiply(M, M);
+	}
+
+	return multiply(A, fastPow(A, p - 1));
+}
+
+int fibo(int n) {
+	if (n == 0) return 0;
+
+	Matrix Q_0 = { { 1, 1 },{ 1, 0 } };
+	auto Q_n = fastPow(Q_0, n);
+	return Q_n[0][0];
+}
+
+
 int main()
 {
 	/*vector<int> nums = { 3,2,4 };
@@ -203,16 +237,19 @@ int main()
 	string p = "ab";
 	auto r = findAnagrams(s, p);*/
 
-	ListNode ln1(1);
-	ListNode ln2(2);
-	ListNode ln3(2);
-	ListNode ln4(1);
-	ln1.next = &ln2;
-	ln2.next = &ln3;
-	ln3.next = &ln4;
-	auto res = isPalindrome(&ln1);
+	//ListNode ln1(1);
+	//ListNode ln2(2);
+	//ListNode ln3(2);
+	//ListNode ln4(1);
+	//ln1.next = &ln2;
+	//ln2.next = &ln3;
+	//ln3.next = &ln4;
+	//auto res = isPalindrome(&ln1);
 
 
+	cout << fibo(3);
+
+	int n; cin >> n;
 	return 0;
 }
 
