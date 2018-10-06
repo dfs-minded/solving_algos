@@ -28,27 +28,27 @@ string EditTheWord(string& s) {
 	
 	int letters_left = 26;
 
-	for (int begin = 0, end = 0; end < s.size() || letters_left == 0; ++end) {
-		if (letters_left == 0) {
-			FillMissingLetters(&s, begin, letters_count);
-			return s;
-		}
-
+	for (int begin = 0, end = 0; end < s.size(); ++end) {
 		if (s[end] == '?') --letters_left;
 		else {
 			++letters_count[s[end] - 'A'];
 			if (letters_count[s[end] - 'A'] == 1) --letters_left;
 		}
 
-		if (end - begin < 26) continue;
+		if (end - begin >= 26) {
+			if (s[begin] == '?') ++letters_left;
+			else {
+				--letters_count[s[begin] - 'A'];
+				if (letters_count[s[begin] - 'A'] == 0) ++letters_left;
+			}
 
-		if (s[begin] == '?') ++letters_left;
-		else {
-			--letters_count[s[begin] - 'A'];
-			if (letters_count[s[begin] - 'A'] == 0) ++letters_left;
+			++begin;
 		}
 
-		++begin;
+		if (letters_left == 0) {
+			FillMissingLetters(&s, begin, letters_count);
+			return s;
+		}
 	}
 
 	return "-1";
