@@ -151,9 +151,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CodeWariors.h" />
+    <ClInclude Include="EditTheWord.h" />
+    <ClInclude Include="EnergeticSubstrings.h" />
+    <ClInclude Include="KefaAndCompany.h" />
     <ClInclude Include="LeetCodeEasy.h" />
+    <ClInclude Include="LeetCodeMedium.h" />
+    <ClInclude Include="NovelInVolumes.h" />
+    <ClInclude Include="ReadingBooks.h" />
     <ClInclude Include="StdHeaders.h" />
     <ClInclude Include="Syntax.h" />
+    <ClInclude Include="VeryEasyTask.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

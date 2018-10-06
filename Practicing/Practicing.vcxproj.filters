@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\CodeForces">
+      <UniqueIdentifier>{23b4955b-5c4f-44be-b876-2c75c6e564e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IMSK">
+      <UniqueIdentifier>{9b0a198b-5e1f-4e6b-ad53-643b5bedb8b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\acmp.ru">
+      <UniqueIdentifier>{d7b7a21d-9577-4297-99d8-a6cd3224974b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Practicing.cpp">
@@ -30,6 +39,27 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CodeWariors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KefaAndCompany.h">
+      <Filter>Header Files\CodeForces</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadingBooks.h">
+      <Filter>Header Files\CodeForces</Filter>
+    </ClInclude>
+    <ClInclude Include="EditTheWord.h">
+      <Filter>Header Files\CodeForces</Filter>
+    </ClInclude>
+    <ClInclude Include="VeryEasyTask.h">
+      <Filter>Header Files\IMSK</Filter>
+    </ClInclude>
+    <ClInclude Include="NovelInVolumes.h">
+      <Filter>Header Files\acmp.ru</Filter>
+    </ClInclude>
+    <ClInclude Include="EnergeticSubstrings.h">
+      <Filter>Header Files\CodeForces</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeMedium.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
