@@ -10,6 +10,15 @@ void Print(const vector<T>& data) {
 	cout << endl;
 }
 
+template<class InputIt>
+void Print(InputIt first, InputIt last) {
+	while (first != last) {
+		cout << *first << " ";
+		++first;
+	}
+
+	cout << endl;
+}
 
 int main()
 {
@@ -17,7 +26,12 @@ int main()
 
 	vector<int> autofilled(10);
 	iota(autofilled.begin(), autofilled.end(), -5);
-	Print<int>(autofilled);
+	//Print<int>(autofilled);
+
+	// 2. Reverse iterators
+
+	Print(autofilled.begin(), autofilled.end());
+	Print(autofilled.rbegin(), autofilled.rend());
 
 
 	int i; cin >> i;

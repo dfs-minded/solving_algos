@@ -224,6 +224,29 @@ int fibo(int n) {
 }
 
 
+bool checkPossibility(vector<int>& nums) {
+	if (nums.size() <= 1) return true;
+	int misplaced_indx = -1;
+
+	for (int i = 1; i < nums.size(); ++i) {
+		if (nums[i] < nums[i - 1]) {
+			if (misplaced_indx != -1) return false;
+			else misplaced_indx = i - 1;
+		}
+	}
+
+	if (misplaced_indx == -1) return true;
+
+	// situations [4 3 3 3 3] and [3 3 3 4 3]
+	if (misplaced_indx == 0 || misplaced_indx == nums.size() - 2)
+		return true;
+
+	if (nums[misplaced_indx + 1] < nums[misplaced_indx - 1]) // [3 3 4 3 3]
+		return false;
+
+	return true;
+}
+
 int main()
 {
 	/*vector<int> nums = { 3,2,4 };
@@ -247,7 +270,10 @@ int main()
 	//auto res = isPalindrome(&ln1);
 
 
-	cout << fibo(3);
+	//cout << fibo(3);
+
+	vector<int> input{ 4,2,3};
+	cout << checkPossibility(input);
 
 	int n; cin >> n;
 	return 0;

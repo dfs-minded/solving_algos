@@ -37,30 +37,32 @@ void Write(int res) {
 	}
 }
 
-bool CanSplit(const vector<int>& pages_num, int volumes_left, int max_pages) {
-	int i = 0;
+bool CanSplit(const vector<int>& pages, int volumes, int max_pages_per_vol) {
 	int curr_sum = 0;
+	int curr_vols = 0;
 
-	for (; i < pages_num.size() && volumes_left; ++i) {
-		if (pages_num[i] > max_pages) return false;
+	for (int i = 0; i < pages.size(); ++i) {
+		if (pages[i] > max_pages_per_vol) return false;
+		curr_sum += pages[i];
 
-		if (curr_sum + pages_num[i] > max_pages) {
-			--volumes_left;
-			curr_sum = pages_num[i];
-		} else
-			curr_sum += pages_num[i];
+		if (curr_sum > max_pages_per_vol) {
+			++curr_vols;
+			curr_sum = pages[i];
+		}
+		else if (i + 1 == pages.size())
+			++curr_vols;
 	}
-	
-	return (volumes_left > 0) && (i >= pages_num.size());
+
+	return curr_vols >= volumes;
 }
 
-int SolveNovelInVolumes(const vector<int>& pages_num, int vols_num) {
+int SolveNovelInVolumes(const vector<int>& pages, int vols_num) {
 	int lo = 0;
-	int hi = accumulate(pages_num.begin(), pages_num.end(), 0);
+	int hi = accumulate(pages.begin(), pages.end(), 0);
 
 	while (hi - lo > 1) {
 		int mid = lo + (hi - lo) / 2;
-		if (CanSplit(pages_num, vols_num, mid)) hi = mid;
+		if (CanSplit(pages, vols_num, mid)) hi = mid;
 		else lo = mid;
 	}
 
@@ -68,13 +70,12 @@ int SolveNovelInVolumes(const vector<int>& pages_num, int vols_num) {
 }
 
 int main() {
-	vector<int> pages_num;
+	vector<int> pages_num; 
 	int vols_num;
 
 	tie(pages_num, vols_num) = Read();
 	Write(SolveNovelInVolumes(pages_num, vols_num));
 
-	//int o; cin >> o;
 	return 0;
 }
 

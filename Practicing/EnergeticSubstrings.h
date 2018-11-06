@@ -4,29 +4,27 @@
 
 using namespace std;
 
-int HeavyMetal(const string& s) {
+long long HeavyMetal(const string& s) {
 	const string begin_str = "heavy";
 	const string end_str = "metal";
 
-	auto begin_index = s.find(begin_str, 0);
-	if (begin_index == string::npos) return 0;
-
-	auto end_index = s.find(end_str, begin_index + begin_str.size());
+	int ends_count = 0;
+	for (auto i = s.find(end_str, 0); i != string::npos; 
+		 i = s.find(end_str, i + end_str.size()))
+		++ends_count;
 	
-	int begins_count = 1;
-	int res = 1;
+	auto begin_index = s.find(begin_str, 0);
+	auto end_index = s.find(end_str, 0);
+	long long res = 0;
 
-	while (end_index != string::npos) {
-		if (begin_index != string::npos && begin_index < end_index) {
+	while (begin_index != string::npos) {
+		if (begin_index < end_index) {
+			res += ends_count;
 			begin_index = s.find(begin_str, begin_index + begin_str.size());
-			if (begin_index != string::npos) {
-				if (begin_index < end_index) ++res;
-				++begins_count;
-			}
 		}
 		else {
+			--ends_count;
 			end_index = s.find(end_str, end_index + end_str.size());
-			if (end_index != string::npos) res += begins_count;
 		}
 	}
 

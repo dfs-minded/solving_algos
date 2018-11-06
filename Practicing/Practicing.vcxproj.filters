@@ -62,5 +62,41 @@
     <ClInclude Include="LeetCodeMedium.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Fizpracticum.h">
+      <Filter>Header Files\CodeForces</Filter>
+    </ClInclude>
+    <ClInclude Include="CowsInHouses.h">
+      <Filter>Header Files\acmp.ru</Filter>
+    </ClInclude>
+    <ClInclude Include="TheRest.h">
+      <Filter>Header Files\acmp.ru</Filter>
+    </ClInclude>
+    <ClInclude Include="Diplomas.h">
+      <Filter>Header Files\acmp.ru</Filter>
+    </ClInclude>
+    <ClInclude Include="JumpingTheLetters.h">
+      <Filter>Header Files\acmp.ru</Filter>
+    </ClInclude>
+    <ClInclude Include="Nails.h">
+      <Filter>Header Files\acmp.ru</Filter>
+    </ClInclude>
+    <ClInclude Include="Cafe.h">
+      <Filter>Header Files\acmp.ru</Filter>
+    </ClInclude>
+    <ClInclude Include="Ledder2Pointers.h">
+      <Filter>Header Files\CodeForces</Filter>
+    </ClInclude>
+    <ClInclude Include="ApproximationOfConstantRange.h">
+      <Filter>Header Files\CodeForces</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeHArd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Farmer1.h">
+      <Filter>Header Files\acmp.ru</Filter>
+    </ClInclude>
+    <ClInclude Include="Haliava.h">
+      <Filter>Header Files\acmp.ru</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
