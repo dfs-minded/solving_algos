@@ -266,6 +266,104 @@ bool stoneGame(vector<int>& piles) {
 	return scores.First > scores.Second;
 }
 
+int lengthOfLIS(vector<int>& nums) {
+	vector<int> last_elem;
+
+	for (int i = 0; i < nums.size(); ++i) {
+		if (last_elem.empty() || last_elem.back() < nums[i]) last_elem.push_back(nums[i]);
+		else {
+			auto first_greater_or_eq_iter = lower_bound(last_elem.begin(), last_elem.end(), nums[i]);
+			*first_greater_or_eq_iter = nums[i];
+		}
+	}
+
+	return last_elem.size();
+}
+
+
+bool isSubsequence(string s, string t) {
+	vector<vector<int>> indices(26);
+	for (int i = 0; i < t.size(); ++i)
+		indices[t[i] - 'a'].push_back(i);
+
+	int last_letter_indx = -1;
+	for (auto c : s) {
+		auto letters_indices = indices[c - 'a'];
+		auto first_greater_iter = upper_bound(letters_indices.begin(), letters_indices.end(), last_letter_indx);
+		if (first_greater_iter == letters_indices.end()) return false;
+		last_letter_indx = *first_greater_iter;
+	}
+
+	return true;
+}
+
+
+// z*n vector
+vector<vector<int>> dp;
+
+int solveFindMaxForm(const vector<string>& strs, int i, int z, int n) {
+	if (i < 0) return 0;
+	if (dp[z][n] != -1) return dp[z][n];
+
+	int zeroes = 0;
+	int ones = 0;
+	for (auto c : strs[i]) {
+		if (c == '0') ++zeroes;
+		else ++ones;
+	}
+
+	int res1 = 0;
+	if (zeroes <= z && ones <= n) // can form
+		res1 = solveFindMaxForm(strs, i - 1, z - zeroes, n - ones) + 1; // form
+	int res2 = solveFindMaxForm(strs, i - 1, z, n); // do not form
+
+	dp[z][n] = max(res1, res2);
+	return dp[z][n];
+}
+
+int findMaxForm(vector<string>& strs, int z, int n) {
+	dp = vector<vector<int>>(z + 1, vector<int>(n + 1, -1));
+	dp[0][0] = 0;
+	
+	return solveFindMaxForm(strs, strs.size() - 1, z, n);
+}
+
+int CalcMaxProduct(const vector<int>& nums, int l, int r, int negatives_num) {
+	if (l == r - 1) return nums[l];
+	if (negatives_num % 2 == 0)
+		return accumulate(nums.begin() + l, nums.begin() + r, 1, multiplies<int>());
+
+	int left_product = 1;
+	while (nums[l] > 0) left_product *= nums[l++];
+	if (negatives_num > 1) left_product *= nums[l++];
+
+	int right_product = 1;
+	while (nums[--r] > 0)
+		right_product *= nums[r--];
+	if (negatives_num > 1) right_product *= nums[r];
+
+	int res = accumulate(nums.begin() + l, nums.begin() + r, 1, multiplies<int>());
+
+	res *= (right_product > left_product ? right_product : left_product);
+
+	return res;
+}
+
+int maxProduct(vector<int>& nums) {
+	nums.push_back(0); // safeguard
+	int negatives_num = 0;
+	int res = 0;
+	int l = 0;
+	for (int r = 0; r < nums.size(); ++r) {
+		if (nums[r] < 0) ++negatives_num;
+		else if (nums[r] == 0) {
+			res = max(res, CalcMaxProduct(nums, l, r, negatives_num));
+			l = r + 1;
+		}
+	}
+
+	return res;
+}
 
 
 int main()
@@ -308,8 +406,22 @@ int main()
 	/*vector<vector<int>> input = { { 1,2 },{ 1,1 } };
 	cout << minPathSum(input);*/
 
-	vector<int> input = { 5,3, 4, 5};
-	cout << stoneGame(input);
+	/*vector<int> input = { 5,3, 4, 5};
+	cout << stoneGame(input);*/
+
+	//vector<int> input = { 4,10,4,3,8,9 };
+	//cout << lengthOfLIS(input);
+
+
+	/*string s = "acb";
+	string t = "ahbgdc";
+	cout << isSubsequence(s, t);*/
+
+	//vector<string> input = { "10","0001","111001","1","0" };
+	//cout << findMaxForm(input, 5, 3);
+
+	vector<int> input = { 2,3,-2,4 };
+	cout << maxProduct(input);
 
 	int u; cin >> u;
 	return 0;
