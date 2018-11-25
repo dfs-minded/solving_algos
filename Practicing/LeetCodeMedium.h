@@ -266,6 +266,21 @@ bool stoneGame(vector<int>& piles) {
 	return scores.First > scores.Second;
 }
 
+// O(N^2) space, O(N^2) time
+bool stoneGame2(vector<int>& p) {
+	int n = p.size();
+	// dp[i][j] - the biggest number of stones you can get more than the opponent, taking piles rom range [i,j]
+	vector<vector<int>> dp(n, vector<int>(n));
+	for (int i = 0; i < n; ++i) dp[i][i] = p[i];
+
+	for (int d = 1; d < n - 1; ++d)
+		for (int i = 0; i < n - d; ++i) {
+			dp[i][i + d] = max(p[i] - dp[i + 1][i + d], p[i + d] - dp[i][i + d - 1]);
+		}
+
+	return dp[0][0] > 0;
+}
+
 int lengthOfLIS(vector<int>& nums) {
 	vector<int> last_elem;
 
@@ -365,6 +380,273 @@ int maxProduct(vector<int>& nums) {
 	return res;
 }
 
+double largestSumOfAverages(vector<int>& A, int K) {
+	vector<vector<double>> memo(K + 1, vector<double>(A.size()));
+
+	for (int k = 1; k <= K; ++k) {
+		for (int l = 0; l < A.size(); ++l) {
+			double curr_sum = 0;
+			for (int r = l; r < A.size(); ++r) {
+				curr_sum += A[r];
+				double avg = curr_sum / (r - l + 1);
+				int k_1_avg = l > 0 ? memo[k - 1][l - 1] : 0;
+				memo[k][r] = max(memo[k][r], k_1_avg + avg);
+			}
+		}
+	}
+
+	return memo.back().back();
+}
+
+
+//vector<vector<int>> memo_mf; // memo[i][j] - number of strings can form using i zeros and j ones.
+//pair<int, int> CalcZeroesAndOnes(const string& str) {
+//	pair<int, int> res{ 0,0 };
+//	for (char c : str) {
+//		if (c == '0') ++res.first;
+//		else ++res.second;
+//	}
+//	return res;
+//}
+//
+//int findMaxForm(vector<string>& strs, int z, int n) {
+//	memo_mf = vector<vector<int>>(z + 1, vector<int>(n + 1, -1));
+//	solveFindMaxForm(strs, strs.size() - 1, z, n);
+//	return memo_mf.back().back();
+//}
+//
+//int solveFindMaxForm2(const vector<string>& strs, int i, int z, int n) {
+//	if (i < 0) return 0;
+//	if (memo_mf[z][n] != -1) return memo_mf[z][n];
+//
+//	auto zeroes_and_ones = CalcZeroesAndOnes(strs[i]);
+//
+//	int res1 = solveFindMaxForm(strs, i - 1, z, n); // do not form current string
+//	int res2 = 0;
+//	if (z >= zeroes_and_ones.first && n >= zeroes_and_ones.second) { // if can form
+//		int zeroes_left = z - zeroes_and_ones.first;
+//		int ones_left = n - zeroes_and_ones.second;
+//
+//		res2 = solveFindMaxForm(strs, i - 1, zeroes_left, ones_left) + 1; // form
+//	}
+//
+//	memo_mf[z][n] = max(res1, res2);
+//	return memo_mf[z][n];
+//}
+
+
+
+int maximalSquare(vector<vector<char>>& matrix) {
+	if (matrix.empty()) return 0;
+	int max_sofar = 0;
+
+	vector<int> prev(matrix[0].size());
+	vector<int> curr(matrix[0].size());
+
+	for (int i = 0; i < matrix.size(); ++i) {
+		for (int j = 0; j < matrix[0].size(); ++j) {
+			if (j == 0)
+				curr[j] = (matrix[i][j] - '0');
+			else
+				curr[j] = (min({ curr[j - 1], prev[j - 1], prev[j] }) + 1) * (matrix[i][j] - '0');
+
+			max_sofar = max(max_sofar, curr[j]);
+		}
+		swap(prev, curr);
+	}
+
+	return max_sofar * max_sofar;
+}
+
+
+vector<vector<int>> partition_memo;
+
+bool canPartition(const vector<int>& nums, int i, int target_sum) {
+	if (target_sum == 0) return true;
+	if (i == nums.size() || target_sum < 0) return false;
+
+	if (partition_memo[i][target_sum] != -1) return (partition_memo[i][target_sum] == 1);
+
+	bool res = canPartition(nums, i + 1, target_sum) ||
+		canPartition(nums, i + 1, target_sum - nums[i]);
+	partition_memo[i][target_sum] = res ? 1 : 0;
+	return res;
+}
+
+bool canPartition(vector<int>& nums) {
+	double target_sum = accumulate(nums.begin(), nums.end(), 0.0) / 2;
+	if (target_sum - static_cast<int>(target_sum) > numeric_limits<double>::epsilon())
+		return false;
+
+	partition_memo = vector<vector<int>>(nums.size(), vector<int>(target_sum + 1, -1));
+
+	return canPartition(nums, 0, target_sum);
+}
+
+bool canPartitionBetter(vector<int>& nums) {
+	int sum = accumulate(nums.begin(), nums.end(), 0);
+	if (sum % 2 != 0) return false;
+
+	int target = sum / 2;
+	vector<bool> memo(target + 1);
+	memo[0] = 1;
+
+	for (int i = 0; i < nums.size(); ++i) {
+		for (int s = target; s >= nums[i]; --s) {
+			memo[s] = memo[s] || memo[s - nums[i]];
+		}
+	}
+
+	return memo.back();
+}
+
+// Erases elements with bigger difficulty and smaller profit from array
+void EraseSmallerProfitElem(vector<pair<int, int>>& diff_to_prof) {
+	int max_sofar = diff_to_prof[0].second;
+	int l = 1; // points to the end of new array
+	for (int i = 1; i < diff_to_prof.size(); ++i) {
+		if (diff_to_prof[i].second > max_sofar) {
+			diff_to_prof[l++] = diff_to_prof[i];
+			max_sofar = diff_to_prof[i].second;
+		}
+	}
+
+	diff_to_prof.erase(diff_to_prof.begin() + l, diff_to_prof.end());
+}
+
+// Erases elements with same difficulty but different value by keeping those, who have greater value.
+void EraseSameDifficultyElem(vector<pair<int, int>>& diff_to_prof) {
+	int l = 0; // points to the last element of the new array
+	for (int i = 1; i < diff_to_prof.size(); ++i) {
+		if (diff_to_prof[i].first != diff_to_prof[i - 1].first) ++l;
+		diff_to_prof[l] = diff_to_prof[i];
+	}
+
+	diff_to_prof.erase(diff_to_prof.begin() + l + 1, diff_to_prof.end());
+}
+
+int CalcMaxProfit(const vector<pair<int, int>>& diff_to_prof, vector<int>& workers) {
+	int res = 0;
+	for (auto w : workers) {
+		pair<int, int> curr_worker(w, numeric_limits<int>::max());
+		auto greater = upper_bound(diff_to_prof.begin(), diff_to_prof.end(), curr_worker);
+		if (greater == diff_to_prof.begin()) continue; // skip the worker, no job for him
+		--greater;
+		res += greater->second;
+	}
+	return res;
+}
+
+int maxProfitAssignment(vector<int>& difficulty, vector<int>& profit, vector<int>& workers) {
+	vector<pair<int, int>> diff_to_prof(difficulty.size());
+
+	for (int i = 0; i < difficulty.size(); ++i)
+		diff_to_prof[i] = make_pair(difficulty[i], profit[i]);
+
+	sort(diff_to_prof.begin(), diff_to_prof.end());
+
+	EraseSmallerProfitElem(diff_to_prof);
+	
+	sort(diff_to_prof.begin(), diff_to_prof.end());
+
+	EraseSameDifficultyElem(diff_to_prof);
+
+	return CalcMaxProfit(diff_to_prof, workers);
+}
+
+bool CanSplitArrayIntoConsecutiveSubsequences(vector<int>& nums) {
+	multiset<pair<int, int>> existing_sequences; // last sequence element to length pair
+
+	for (int i = 0; i < nums.size(); ++i) {
+		pair<int, int> search_elem{ nums[i] - 1, 0 };
+		auto to_append = upper_bound(existing_sequences.begin(), existing_sequences.end(), search_elem);
+		if (to_append == existing_sequences.end() || to_append->first != search_elem.first) // cannot append
+			existing_sequences.insert({ nums[i], 1 });
+		else {
+			existing_sequences.erase(to_append);
+			existing_sequences.insert({ nums[i], to_append->second + 1 });
+		}
+	}
+
+	for (auto seq : existing_sequences)
+		if (seq.second < 3) return false;
+
+	return true;
+}
+
+#include <random>
+int findKthLargest(vector<int>& nums, int k) {
+	random_device rd;
+	mt19937 g(rd());
+	shuffle(nums.begin(), nums.end(), g);
+
+	k = nums.size() - k; // k-th smallest
+
+	int lo = 0, hi = nums.size() - 1;
+	int p = nums[lo];
+	int lt = lo, i = lo + 1, gt = hi;
+	// invariants: [lo, lt - 1] - lesser than p, [lt, i - 1] - equal, [gh + 1, hi] - greater than p
+	// [i, gt] - unexplored
+
+		while (true) {
+		while (i <= gt) {
+			if (nums[i] < p) swap(nums[lt++], nums[i++]);
+			else if (nums[i] > p) swap(nums[gt--], nums[i]);
+			else ++i;
+		}
+
+		if (k < lt) hi = lt - 1; // partition lhs
+		else if (k > i - 1) lo = i; // partition rhs
+		else return nums[lt]; // any element from equal range
+
+		p = nums[lo];
+		lt = lo, i = lo + 1, gt = hi;
+	}
+}
+
+
+class UnionFind {
+public:
+	UnionFind(int N) : data(vector<int>(N, -1)) {}
+
+	void Connect(int p, int q) {
+		if (IsConnected(p, q)) return;
+		int r1 = Root(p);
+		int w1 = data[r1];
+		int r2 = Root(q);
+		int w2 = data[r2];
+
+		if (w1 > w2) {
+			--data[r2]; // increase height
+			data[r1] = r2; // make the bigger tree subtree of the smaller tree
+		}
+		else {
+			--data[r1];
+			data[r2] = r1;
+		}
+	}
+
+	bool IsConnected(int p, int q) {
+		return Root(p) == Root(q);
+	};
+
+private:
+	vector<int> data;
+
+	int Root(int v) {
+		while (data[v] > 0) v = data[v];
+		return v;
+	}
+};
+
+vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+	UnionFind uf(edges.size());
+
+	for (auto edge : edges) {
+		if (uf.IsConnected(edge[0], edge[1])) return edge;
+		uf.Connect(edge[0], edge[1]);
+	}
+}
 
 int main()
 {
@@ -420,8 +702,32 @@ int main()
 	//vector<string> input = { "10","0001","111001","1","0" };
 	//cout << findMaxForm(input, 5, 3);
 
-	vector<int> input = { 2,3,-2,4 };
-	cout << maxProduct(input);
+	//vector<int> input = { 2,3,-2,4 };
+	//cout << maxProduct(input);
+
+	/*vector<int> input = { 9,1,2,3,9 };
+	cout << largestSumOfAverages(input, 3);*/
+
+
+	/*vector<vector<char>> input = { { '1','0' },{ '1','0' } };
+	cout << maximalSquare(input);*/
+
+	/*vector<int> input = { 1,5,11,5 };
+	cout << canPartitionBetter(input);*/
+
+
+	//vector<int> difficulty = { 68, 35, 52, 47, 86 };
+	//vector<int> profit =	 { 67, 17, 1, 81, 3 };
+	//vector<int> workers = { 92, 10, 85, 84, 82 };
+	//cout << maxProfitAssignment(difficulty, profit, workers);
+
+	//vector<int> input = { 3,2,1,5,6,4 }; //2
+	//vector<int> input2 = { 3, 2, 3, 1, 2, 4, 5, 5, 6 }; //4
+	//
+	//cout << findKthLargest(input2, 4);
+
+	vector<vector<int>> input = { {3, 7}, { 1,4 }, { 2,8 }, { 1,6 }, { 7,9 }, { 6,10 }, { 1,7 }, { 2,3 }, { 8,9 }, { 5,9 }};
+	auto res = findRedundantConnection(input);
 
 	int u; cin >> u;
 	return 0;

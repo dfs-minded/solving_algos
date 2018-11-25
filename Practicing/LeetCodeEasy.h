@@ -247,6 +247,29 @@ bool checkPossibility(vector<int>& nums) {
 	return true;
 }
 
+string longestCommonPrefix(vector<string>& strs) {
+	if (strs.empty()) return "";
+	int last_common_index = strs[0].size() - 1;
+
+	for (int i = 1; i < strs.size(); ++i) {
+		int j = 0; // number of equal chars
+		while (j < strs[i].size() && strs[0][j] == strs[i][j]) ++j;
+
+		last_common_index = min(last_common_index, j - 1);
+	}
+
+	return strs[0].substr(0, last_common_index + 1);
+}
+
+void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+	int last_merged = nums1.size() - 1;
+
+	for (int i = nums1.size() - nums2.size() - 1, j = nums2.size() - 1; j >= 0; --last_merged) {
+		if (nums1[i] > nums2[j]) nums1[last_merged] = nums1[i--];
+		else nums1[last_merged] = nums2[j--];
+	}
+}
+
 int main()
 {
 	/*vector<int> nums = { 3,2,4 };
@@ -272,8 +295,15 @@ int main()
 
 	//cout << fibo(3);
 
-	vector<int> input{ 4,2,3};
-	cout << checkPossibility(input);
+	/*vector<int> input{ 4,2,3};
+	cout << checkPossibility(input);*/
+
+	/*vector<string> input{ "flower", "flow", "flight" };
+	cout << longestCommonPrefix(input);*/\
+
+	vector<int> input1 = { 0, 0, 3, 0, 0, 0, 0, 0, 0 };
+	vector<int> input2 = { -1, 1, 1, 1, 2, 3 };
+	merge(input1, 3, input2, 6);
 
 	int n; cin >> n;
 	return 0;
