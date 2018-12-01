@@ -398,6 +398,24 @@ double largestSumOfAverages(vector<int>& A, int K) {
 	return memo.back().back();
 }
 
+double largestSumOfAveragesBetter(vector<int>& A, int K) {
+	vector<double> max_avg(A.size());
+
+	for (int g = 1; g <= K; ++g) {
+		for (int r = A.size() - 1; r >= g - 1; --r) {
+			double curr_sum = 0;
+			for (int l = r; l >= g - 1; --l) {
+				curr_sum += A[l];
+				double avg = curr_sum / (r - l + 1);
+				int prev_group_res = l > 0 ? max_avg[l - 1] : 0;
+				max_avg[r] = max(max_avg[r], prev_group_res + avg);
+			}
+		}
+	}
+
+	return max_avg.back();
+}
+
 
 //vector<vector<int>> memo_mf; // memo[i][j] - number of strings can form using i zeros and j ones.
 //pair<int, int> CalcZeroesAndOnes(const string& str) {
@@ -648,6 +666,29 @@ vector<int> findRedundantConnection(vector<vector<int>>& edges) {
 	}
 }
 
+
+struct Interval {
+	int start;
+	int end;
+	Interval() : start(0), end(0) {}
+	Interval(int s, int e) : start(s), end(e) {}
+};
+
+int eraseOverlapIntervals(vector<Interval>& intervals) {
+	auto less_then = [](Interval& lhs, Interval& rhs) { return lhs.end < rhs.end; };
+	sort(intervals.begin(), intervals.end(), less_then);
+
+	int to_remove = 0;
+	int last_taken_interval = 0;
+	for (int i = 1; i < intervals.size(); ++i) {
+		if (intervals[i].start < intervals[last_taken_interval].end)
+			++to_remove;
+		else last_taken_interval = i;
+	}
+
+	return to_remove;
+}
+
 int main()
 {
 	//auto res = generateParenthesis(0);
@@ -705,8 +746,10 @@ int main()
 	//vector<int> input = { 2,3,-2,4 };
 	//cout << maxProduct(input);
 
-	/*vector<int> input = { 9,1,2,3,9 };
-	cout << largestSumOfAverages(input, 3);*/
+	vector<int> input = { 9,1,2,3,9 };
+	cout << largestSumOfAveragesBetter(input, 3) << endl; // -> 20
+	input = { 1, 2, 3, 4, 5, 6, 7 };
+	cout << largestSumOfAveragesBetter(input, 4) << endl; // -> 20.5
 
 
 	/*vector<vector<char>> input = { { '1','0' },{ '1','0' } };
@@ -726,8 +769,11 @@ int main()
 	//
 	//cout << findKthLargest(input2, 4);
 
-	vector<vector<int>> input = { {3, 7}, { 1,4 }, { 2,8 }, { 1,6 }, { 7,9 }, { 6,10 }, { 1,7 }, { 2,3 }, { 8,9 }, { 5,9 }};
-	auto res = findRedundantConnection(input);
+	//vector<vector<int>> input = { {3, 7}, { 1,4 }, { 2,8 }, { 1,6 }, { 7,9 }, { 6,10 }, { 1,7 }, { 2,3 }, { 8,9 }, { 5,9 }};
+	//auto res = findRedundantConnection(input);
+
+	vector<Interval> intervals{ {1, 100}, {11, 22}, {1, 11}, {2, 12} };
+	cout << eraseOverlapIntervals(intervals);
 
 	int u; cin >> u;
 	return 0;
