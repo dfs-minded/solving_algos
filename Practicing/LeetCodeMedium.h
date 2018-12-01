@@ -366,6 +366,36 @@ int maxProduct(vector<int>& nums) {
 }
 
 
+bool isPossible(vector<int>& nums) {
+	if (nums.size() < 3) return false;
+	// last value in the sequencr to len pair
+	multiset<pair<int, int>> sequences;
+	sequences.insert({ nums[0], 1 });
+
+	for (int i = 1; i < nums.size(); ++i) {
+		auto new_seq = make_pair(nums[i], 1);
+		auto it = sequences.lower_bound(new_seq);
+		if (it == sequences.end()) --it;
+
+		// skip sequences we don't want to uppend while we can
+		while (it != sequences.begin() && it->second >= 3 && (--it)->first == (nums[i] - 1));
+
+		// if we cannot make a consequtive subsequence
+		if (it->first != nums[i] - 1 && ++it !=  (++it)->first != nums[i] - 1)
+			sequences.insert(new_seq);
+		else { // append existing with the small len or
+			auto to_append_len = it->second;
+			sequences.erase(it);
+			sequences.insert({ nums[i], to_append_len + 1 });
+		}
+	}
+
+	for (auto& s : sequences)
+		if (s.second < 3) return false;
+
+	return true;
+}
+
 int main()
 {
 	//auto res = generateParenthesis(0);
@@ -420,8 +450,12 @@ int main()
 	//vector<string> input = { "10","0001","111001","1","0" };
 	//cout << findMaxForm(input, 5, 3);
 
-	vector<int> input = { 2,3,-2,4 };
-	cout << maxProduct(input);
+	/*vector<int> input = { 2,3,-2,4 };
+	cout << maxProduct(input);*/
+
+	vector<int> input = { 1,2,3,3,4,5}; // true
+	vector<int> input2 = { 1,2,5,5,6,6,7,8,8,9}; // false
+	cout << isPossible(input2);
 
 	int u; cin >> u;
 	return 0;
