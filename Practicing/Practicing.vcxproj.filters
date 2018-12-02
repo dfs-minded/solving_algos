@@ -22,6 +22,9 @@
     <Filter Include="Header Files\acmp.ru">
       <UniqueIdentifier>{d7b7a21d-9577-4297-99d8-a6cd3224974b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\InterviewBit">
+      <UniqueIdentifier>{41e885f3-060a-4362-8c89-e038fe5afe45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Practicing.cpp">
@@ -59,9 +62,6 @@
     <ClInclude Include="EnergeticSubstrings.h">
       <Filter>Header Files\CodeForces</Filter>
     </ClInclude>
-    <ClInclude Include="LeetCodeMedium.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Fizpracticum.h">
       <Filter>Header Files\CodeForces</Filter>
     </ClInclude>
@@ -97,6 +97,30 @@
     </ClInclude>
     <ClInclude Include="Haliava.h">
       <Filter>Header Files\acmp.ru</Filter>
+    </ClInclude>
+    <ClInclude Include="BitManipulation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SwipeLine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeMedium1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeMedium2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Divisibility.h">
+      <Filter>Header Files\CodeForces</Filter>
+    </ClInclude>
+    <ClInclude Include="Secutity.h">
+      <Filter>Header Files\acmp.ru</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedLists.h">
+      <Filter>Header Files\InterviewBit</Filter>
     </ClInclude>
     <ClInclude Include="Security.h">
       <Filter>Header Files\IMSK</Filter>

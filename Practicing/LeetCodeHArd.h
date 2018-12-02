@@ -279,11 +279,11 @@ bool isDelim(char c) {
 
 int priority(char c) {
 	switch(c) {
+			case '(': return 3;
             case '*':
 			case '/': return 2;
 			case '+':
 			case '-': return 1;
-
 			default: return -1;
 	}
 }
@@ -294,14 +294,14 @@ void evaluate(stack<char>& operators, stack<int>& operands) {
 	int a = operands.top(); // store final result in a
 	operands.pop();
 
-	int op = operators.top();
+	char op = operators.top();
 	operators.pop();
 
 	switch (op) {
-			case '*': a *= b;
-			case '/': a /= b;
-			case '+': a += b;
-			case '-': a -= b;
+		case '*': a *= b; break;
+		case '/': a /= b; break;
+		case '+': a += b; break;
+		case '-': a -= b; break;
 	}
 
 	operands.push(a);
@@ -321,13 +321,14 @@ int calculate(string s) {
 			operators.pop();
 		}
 		else if (isOperator(s[i])) {
-			while (!operators.empty() && priority(s[i]) > priority(operators.top()))
+			while (!operators.empty() && priority(s[i]) >= priority(operators.top()))
 				evaluate(operators, operands);
 			operators.push(s[i]);
 		}
 		else if (isdigit(s[i])) {
 			int x;
-			//from_chars(&s[i], s.back(), x);
+			//from_chars(&s[i], &s.back(), x);
+			x = atoi(s.substr(i).c_str());
 			operands.push(x);
 			while (isdigit(s[i])) ++i;
 			--i;
@@ -335,7 +336,7 @@ int calculate(string s) {
 	}
 
 	while (!operators.empty()) evaluate(operators, operands);
-	return operands.top();
+	return operands.empty() ? 0 : operands.top();
 }
 
 
@@ -352,42 +353,6 @@ vector<int> ComputeSums(vector<int>& nums, int m) {
 	}
 	res.push_back(sum);
 	return res;
-}
-
-vector<int> maxSumOfThreeSubarrays(vector<int>& nums, int m) {
-	vector<int> sums_of_windows = ComputeSums(nums, m);
-
-	vector<int> max_left_index(sums_of_windows.size());
-	int max_sofar = sums_of_windows[0];
-	for (int i = 1; i < sums_of_windows.size(); ++i) {
-		max_left_index[i] = max_left_index[i - 1];
-		if (sums_of_windows[i] > max_sofar) {
-			max_left_index[i] = i;
-			max_sofar = sums_of_windows[i];
-		}
-	}
-
-	vector<int> max_right_index(sums_of_windows.size());
-	max_right_index.back() = sums_of_windows.size() - 1;
-	max_sofar = sums_of_windows.back();
-	for (int i = sums_of_windows.size() - 2; i >= 0; --i) {
-		max_right_index[i] = max_right_index[i + 1];
-		if (sums_of_windows[i] > max_sofar) {
-			max_right_index[i] = i;
-			max_sofar = sums_of_windows[i];
-		}
-	}
-
-	int j_res = -1; // start index of the middle window
-	int curr_sum = numeric_limits<int>::min();
-	for (int j = 1; j + 1 < sums_of_windows.size(); ++j) {
-		int sum_on_lhs = sums_of_windows[max_left_index[j - 1]];
-		int sum_on_rhs = sums_of_windows[max_right_index[j + 1]];
-		if (sum_on_lhs + sums_of_windows[j] + sum_on_rhs > curr_sum)
-			j_res = j;
-	}
-
-	return { max_left_index[j_res - 1], j_res, max_right_index[j_res + 1] };
 }
 
 
@@ -430,8 +395,9 @@ int main() {
 	/*vector<int> input{ 100, 4, 200, 1, 3, 2 };
 	cout << longestConsecutive(input);*/
 
-	vector<int> input{ 1,2,1,2,6,7,5,1 };
-	auto res = maxSumOfThreeSubarrays(input, 2);
+	string input = "(1+(4+5+2)-3)+(6+8)";
+	string input2 = " 2-1 + 2 ";
+	cout << calculate(input);
 
 	int o; cin >> o;
 }

@@ -154,10 +154,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApproximationOfConstantRange.h" />
+    <ClInclude Include="BitManipulation.h" />
     <ClInclude Include="Cafe.h" />
     <ClInclude Include="CodeWariors.h" />
     <ClInclude Include="CowsInHouses.h" />
     <ClInclude Include="Diplomas.h" />
+    <ClInclude Include="Divisibility.h" />
     <ClInclude Include="EditTheWord.h" />
     <ClInclude Include="EnergeticSubstrings.h" />
     <ClInclude Include="Farmer1.h" />
@@ -169,14 +171,19 @@
     <ClInclude Include="Ledder2Pointers.h" />
     <ClInclude Include="LeetCodeEasy.h" />
     <ClInclude Include="LeetCodeHArd.h" />
-    <ClInclude Include="LeetCodeMedium.h" />
+    <ClInclude Include="LeetCodeMedium1.h" />
+    <ClInclude Include="LeetCodeMedium2.h" />
+    <ClInclude Include="LinkedLists.h" />
     <ClInclude Include="Nails.h" />
     <ClInclude Include="NovelInVolumes.h" />
+    <ClInclude Include="DP.h" />
     <ClInclude Include="PointsAndSegments.h" />
     <ClInclude Include="ReadingBooks.h" />
+    <ClInclude Include="Secutity.h" />
     <ClInclude Include="Security.h" />
     <ClInclude Include="SegmentsInclusion.h" />
     <ClInclude Include="StdHeaders.h" />
+    <ClInclude Include="SwipeLine.h" />
     <ClInclude Include="Syntax.h" />
     <ClInclude Include="TheRest.h" />
     <ClInclude Include="VeryEasyTask.h" />
