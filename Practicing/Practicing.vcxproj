@@ -90,6 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,6 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -161,6 +163,7 @@
     <ClInclude Include="Farmer1.h" />
     <ClInclude Include="Fizpracticum.h" />
     <ClInclude Include="Haliava.h" />
+    <ClInclude Include="InterregionOlimpiade.h" />
     <ClInclude Include="JumpingTheLetters.h" />
     <ClInclude Include="KefaAndCompany.h" />
     <ClInclude Include="Ledder2Pointers.h" />
@@ -169,7 +172,10 @@
     <ClInclude Include="LeetCodeMedium.h" />
     <ClInclude Include="Nails.h" />
     <ClInclude Include="NovelInVolumes.h" />
+    <ClInclude Include="PointsAndSegments.h" />
     <ClInclude Include="ReadingBooks.h" />
+    <ClInclude Include="Security.h" />
+    <ClInclude Include="SegmentsInclusion.h" />
     <ClInclude Include="StdHeaders.h" />
     <ClInclude Include="Syntax.h" />
     <ClInclude Include="TheRest.h" />

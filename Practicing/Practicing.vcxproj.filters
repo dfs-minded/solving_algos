@@ -98,5 +98,17 @@
     <ClInclude Include="Haliava.h">
       <Filter>Header Files\acmp.ru</Filter>
     </ClInclude>
+    <ClInclude Include="Security.h">
+      <Filter>Header Files\IMSK</Filter>
+    </ClInclude>
+    <ClInclude Include="PointsAndSegments.h">
+      <Filter>Header Files\IMSK</Filter>
+    </ClInclude>
+    <ClInclude Include="InterregionOlimpiade.h">
+      <Filter>Header Files\IMSK</Filter>
+    </ClInclude>
+    <ClInclude Include="SegmentsInclusion.h">
+      <Filter>Header Files\IMSK</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
