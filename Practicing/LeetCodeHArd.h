@@ -356,6 +356,96 @@ vector<int> ComputeSums(vector<int>& nums, int m) {
 }
 
 
+
+class Solution {
+public:
+	int swimInWater(const vector<vector<int>>& grid) {
+		int R = grid.size();
+		int C = grid[0].size();
+
+		priority_queue<Site, vector<Site>, greater<Site>> to_process;
+
+		for (int r = 0; r < R; ++r)
+			for (int c = 0; c < C; ++c)
+				to_process.push(Site(r, c, grid[r][c]));
+
+		int last_vertex_id = R * C - 1;
+		UF union_find(last_vertex_id);
+		int res = -1;
+
+		while (!union_find.IsConnected(0, last_vertex_id)) {
+			auto curr = to_process.top();
+			to_process.pop();
+			res = curr.Val;
+			int curr_point_uf_coord = ToUFCoordinates(curr.R, curr.C, R);
+			if (curr.R > 0 && grid[curr.R - 1][curr.C] <= res) // top
+				union_find.Connect(curr_point_uf_coord, ToUFCoordinates(curr.R - 1, curr.C, R));
+
+			if (curr.C < grid[0].size() - 1 && grid[curr.R][curr.C + 1] <= res) // right
+				union_find.Connect(curr_point_uf_coord, ToUFCoordinates(curr.R, curr.C + 1, R));
+
+			if (curr.R < grid.size() - 1 && grid[curr.R + 1][curr.C] <= res) // down
+				union_find.Connect(curr_point_uf_coord, ToUFCoordinates(curr.R + 1, curr.C, R));
+
+			if (curr.C > 0 && grid[curr.R][curr.C - 1] <= res) // left
+				union_find.Connect(curr_point_uf_coord, ToUFCoordinates(curr.R, curr.C - 1, R));
+		}
+
+		return res;
+	}
+private:
+
+	struct Site {
+		int R;
+		int C;
+		int Val;
+
+		Site(int r, int c, int val) : R(r), C(c), Val(val) {};
+
+		bool operator > (const Site& other) const {
+			return Val > other.Val;
+		}
+
+	};
+
+	int ToUFCoordinates(int r, int c, int row_size) {
+		return r * row_size + c;
+	}
+
+	class UF {
+	public:
+		UF(int N) { data.resize(N + 1, -1); }
+
+		void Connect(int p, int q) {
+			if (IsConnected(p, q)) return;
+			int r1 = Root(p);
+			int r2 = Root(q);
+			if (r1 > r2) {
+				data[r1] += data[r2];
+				data[r2] = r1;
+			}
+			else {
+				data[r2] += data[r1];
+				data[r1] = r2;
+			}
+		}
+
+		bool IsConnected(int p, int q) {
+			int r1 = Root(p);
+			int r2 = Root(q);
+			return r1 == r2;
+		}
+
+	private:
+		vector<int> data;
+
+		int Root(int p) {
+			while (data[p] > 0) p = data[p];
+			return p;
+		}
+	};
+};
+
 int main() {
 	/*vector<int> input{ 2,1,5,6,2,3 };
 	cout << MaxAreaHistograms(input);*/
@@ -395,9 +485,13 @@ int main() {
 	/*vector<int> input{ 100, 4, 200, 1, 3, 2 };
 	cout << longestConsecutive(input);*/
 
-	string input = "(1+(4+5+2)-3)+(6+8)";
+	/*string input = "(1+(4+5+2)-3)+(6+8)";
 	string input2 = " 2-1 + 2 ";
-	cout << calculate(input);
+	cout << calculate(input);*/
+
+	Solution s;
+	vector<vector<int>> input = { {6,23,16,13,7},{8,19,14,2,18},{0,22,17,21,9},{12,1,10,24,4},{5,20,3,11,15} };
+	cout << s.swimInWater(input);
 
 	int o; cin >> o;
 }

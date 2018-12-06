@@ -15,7 +15,7 @@ struct Event {
 
 	bool operator< (const Event& other) const {
 		if (Point < other.Point) return true;
-		else if (Point == other.Point) return EventId > other.EventId;
+		else if (Point == other.Point) return EventType < other.EventType;
 		return false;
 	}
 
@@ -40,7 +40,7 @@ vector<vector<Event>> Read() {
 			for (int j = 0; j < M; ++j) {
 				int start; input >> start;
 				int end; input >> end;
-				data[i].push_back(Event(start + 1, 0, j));
+				data[i].push_back(Event(start, 0, j));
 				data[i].push_back(Event(end, 1, j));
 			}
 		}
@@ -68,24 +68,28 @@ vector<bool> Solve(vector<vector<Event>> data) {
 	for (int t = 0; t < data.size(); ++t) {
 		sort(data[t].begin(), data[t].end());
 		set<int> active_segment_ids;
-		int needed_segments = 0;
-		
+
 		// check the ends constraints
 		if (data[t].front().Point != 0 || data[t].back().Point < 10000) {
 			res[t] = false;
 			continue;
 		}
 
-		for (auto e : data[t]) {
+		vector<bool> used(data[t].size() / 2);
+		for (int i = 0; i < data[t].size(); ++i) {
+			auto e = data[t][i];
 			if (e.EventType == 0) active_segment_ids.insert(e.EventId); // segment start
 			else active_segment_ids.erase(e.EventId); // segment end
 			if (active_segment_ids.empty()) { // uncovered time
 				res[t] = false;
 				break;
 			}
-			if (active_segment_ids.size() == 1) ++needed_segments;
+			if (active_segment_ids.size() == 1 && 
+				(i == data[t].size() - 1 || data[t][i+1].Point != e.Point))
+				used[*active_segment_ids.begin()] = true;
 		}
 
+		int needed_segments = accumulate(used.begin(), used.end(), 0);
 		res[t] = needed_segments == data[t].size() / 2;
 	}
 

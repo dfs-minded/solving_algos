@@ -66,7 +66,7 @@ pair<int, vector<int>> Solve(vector<Segment>& segments) {
 		int prev_segment_index = -1;
 		
 		auto pred = [](const Segment& s, const int& start) { return s.End < start; };
-		auto first_can_take_iter = lower_bound(segments.begin(), segments.begin() + i, segments[i].Start, pred);
+		auto first_can_take_iter = upper_bound(segments.begin(), segments.begin() + i, segments[i].Start, pred);
 		
 		if (first_can_take_iter != segments.begin() + i) {
 			include_curr_segment_sum += first_can_take_iter->Value;

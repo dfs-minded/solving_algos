@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -12,7 +13,9 @@ int solveDivisibility(const vector<int>& input) {
 									  // which end at index i-1 of the input array.	
 	dp[0] = 1;
 	for (int i = 0; i < input.size(); ++i) {
-		for (int len = i + 1; len > 0; --len) {
+		if (input[i] <= i + 1) // biggest len possible
+			dp[input[i]] += dp[input[i] - 1];
+		for (int len = min(i + 1, input[i]/2); len > 0; --len) {
 			if (input[i] % len == 0) dp[len] += dp[len - 1];
 			dp[len] %= kModulo;
 		}

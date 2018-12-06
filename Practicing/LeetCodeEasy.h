@@ -270,6 +270,20 @@ void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
 	}
 }
 
+int mySqrt(int x) {
+	int lo = 0;
+	int hi = x;
+
+	while (hi - lo > 1) {
+		int mid = lo + (hi - lo) / 2;
+		if (mid*mid > x) hi = mid;
+		else if (mid*mid < x) lo = mid;
+		else return mid;
+	}
+
+	return lo;
+}
+
 int main()
 {
 	/*vector<int> nums = { 3,2,4 };

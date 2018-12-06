@@ -39,11 +39,66 @@ vector<int> maxSumOfThreeSubarrays(vector<int>& nums, int k) {
 	return res;
 }
 
+
+struct TreeNode {
+	int val;
+	TreeNode *left;
+	TreeNode *right;
+	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+void levelOrderRec(TreeNode* node, int level, vector<vector<int>>& res) {
+	if (!node) return;
+	if (static_cast<int>(res.size() - 1) < level) 
+		res.push_back(vector<int>());
+	res[level].push_back(node->val);
+	levelOrderRec(node->left, level + 1, res);
+	levelOrderRec(node->right, level + 1, res);
+}
+
+vector<vector<int>> levelOrder(TreeNode* root) {
+	vector<vector<int>> res;
+	levelOrderRec(root, 0, res);
+	return res;
+}
+
+int findLength(vector<int>& A, vector<int>& B) {
+	vector<int> dp(A.size());
+	int ans = 0;
+
+	for (int i = 0; i < B.size(); ++i) {
+		for (int j = A.size() - 1; j >= 0; --j) {
+			int prev = j > 0 ? dp[j - 1] : 0;
+			dp[j] = prev;
+			if (A[i] == B[j]) ++dp[j];
+			ans = max(ans, dp[j]);
+		}
+	}
+
+	return ans;
+}
+
 int main() {
 
 	/*vector<int> input{ 1,2,1,2,6,7,5,1 };
 	auto res = maxSumOfThreeSubarrays(input, 2);*/
 
+	/*vector<int> input = { 1,3,4,2,2 };
+	cout << findDuplicate(input);*/
+
+	TreeNode n1(3);
+	TreeNode n2(9);
+	TreeNode n3(20);
+	TreeNode n4(15);
+	TreeNode n5(7);
+
+	n1.left = &n2;
+	n1.right = &n3;
+	n3.left = &n4;
+	n3.right = &n5;
+
+
+	auto res = levelOrder(&n1);
 	int o; cin >> o;
 	return 0;
 }
