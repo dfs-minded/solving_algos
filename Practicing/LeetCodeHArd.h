@@ -446,6 +446,55 @@ private:
 	};
 };
 
+
+vector<int> maxSumOfThreeSubarrays(vector<int>& nums, int k) {
+	const int kSubArrsNum = 3;
+	// stores max sum we can get for each number of sub-arrays (<=3 for this task) ending at index i
+	vector<int> prev_dp(nums.size()), dp(nums.size()); 
+
+	vector<int> prefix_sums(nums.size() + 1);
+	for (int i = 1; i < prefix_sums.size(); ++i)
+		prefix_sums[i] += prefix_sums[i - 1] + nums[i - 1];
+
+	vector<vector<int>> best_last_taken_index(kSubArrsNum, vector<int>(dp.size(), -1));
+
+	for (int m = 0; m < kSubArrsNum; ++m) {
+		for (int i = (m + 1) * k - 1; i < dp.size(); ++i) {
+			dp[i] = i - 1 > 0 ? dp[i - 1] : 0;
+			best_last_taken_index[m][i] = i > 0 ? best_last_taken_index[m][i - 1] : -1;
+			
+			int prev_last_index = i - (m + 1) * k;
+			int curr = prefix_sums[i + 1];
+			if (prev_last_index >= 0) {
+				curr += prev_dp[prev_last_index] - prefix_sums[prev_last_index + 1];
+			}
+			if (curr > dp[i]) {
+				dp[i] = curr;
+				best_last_taken_index[m][i] = prev_last_index - k + 1;
+			}
+		}
+		swap(prev_dp, dp);
+	}
+
+	int max_sum_sofar = -1;
+	int best_index = -1;
+	for (int i = 0; i < dp.size(); ++i) {
+		if (max_sum_sofar < dp[i]) {
+			max_sum_sofar = dp[i];
+			best_index = i;
+		}
+	}
+
+	vector<int> res(kSubArrsNum);
+	for (int m = kSubArrsNum - 1; m > 0; --m) {
+		res[m] = best_index;
+		best_index = best_last_taken_index[m][best_index];
+	}
+	res[0] = best_index;
+
+	return res;
+}
+
 int main() {
 	/*vector<int> input{ 2,1,5,6,2,3 };
 	cout << MaxAreaHistograms(input);*/
@@ -489,9 +538,12 @@ int main() {
 	string input2 = " 2-1 + 2 ";
 	cout << calculate(input);*/
 
-	Solution s;
+	/*Solution s;
 	vector<vector<int>> input = { {6,23,16,13,7},{8,19,14,2,18},{0,22,17,21,9},{12,1,10,24,4},{5,20,3,11,15} };
-	cout << s.swimInWater(input);
+	cout << s.swimInWater(input);*/
+
+	vector<int> input = { 1,2,1,2,6,7,5,1 };
+	auto res = maxSumOfThreeSubarrays(input, 2);
 
 	int o; cin >> o;
 }

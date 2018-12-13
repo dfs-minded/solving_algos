@@ -25,6 +25,9 @@
     <Filter Include="Header Files\InterviewBit">
       <UniqueIdentifier>{41e885f3-060a-4362-8c89-e038fe5afe45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\OnlineJudge">
+      <UniqueIdentifier>{a150d9c8-f9e4-49ee-bfc1-e4a5b76ecd31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Practicing.cpp">
@@ -133,6 +136,12 @@
     </ClInclude>
     <ClInclude Include="SegmentsInclusion.h">
       <Filter>Header Files\IMSK</Filter>
+    </ClInclude>
+    <ClInclude Include="FindingBridges.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CriticalLinks.h">
+      <Filter>Header Files\OnlineJudge</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

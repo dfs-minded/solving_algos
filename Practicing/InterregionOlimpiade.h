@@ -65,10 +65,12 @@ pair<int, vector<int>> Solve(vector<Segment>& segments) {
 		auto include_curr_segment_sum = segments[i].Value;
 		int prev_segment_index = -1;
 		
-		auto pred = [](const Segment& s, const int& start) { return s.End < start; };
-		auto first_can_take_iter = upper_bound(segments.begin(), segments.begin() + i, segments[i].Start, pred);
+		auto pred = []( const Segment& s, const int& start) { 
+			return s.End < start; 
+		};
+		auto first_can_take_iter = lower_bound(segments.begin(), segments.begin() + i + 1, segments[i].Start, pred);
 		
-		if (first_can_take_iter != segments.begin() + i) {
+		if (first_can_take_iter != segments.begin() + i && first_can_take_iter->End <= segments[i].Start) {
 			include_curr_segment_sum += first_can_take_iter->Value;
 			prev_segment_index = distance(segments.begin(), first_can_take_iter);
 		}
