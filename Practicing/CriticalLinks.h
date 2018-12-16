@@ -42,7 +42,7 @@ struct Edge {
 
 	Edge(int from, int to) : From(from), To(to) {}
 
-	operator string() const noexcept { 
+	operator string() const noexcept {
 		return to_string(From) + " - " + to_string(To);
 	}
 };
@@ -58,17 +58,20 @@ void Write(const vector<Edge>& res) {
 }
 
 // DFS on finding bridges in a graph
-void Solve(const vector<vector<int>>& graph, int curr, int parent, int depth, 
-					vector<bool>& visited, vector<int>& min_depth_can_reach, vector<Edge>& res) {
+void Solve(const vector<vector<int>>& graph, int curr, int parent, int depth,
+	vector<bool>& visited, vector<int>& min_depth_can_reach,
+	vector<int>& entry_depth, vector<Edge>& res) {
 	visited[curr] = true;
-	min_depth_can_reach[curr] = depth;
+	min_depth_can_reach[curr] = entry_depth[curr] = depth;
 
 	for (auto adj : graph[curr]) {
 		if (adj == parent) continue;
-		if (!visited[adj]) 
-			Solve(graph, adj, curr, depth + 1, visited, min_depth_can_reach, res);
-
-		min_depth_can_reach[curr] = min(min_depth_can_reach[curr], min_depth_can_reach[adj]);
+		if (!visited[adj]) {
+			Solve(graph, adj, curr, depth + 1, visited, min_depth_can_reach, entry_depth, res);
+			min_depth_can_reach[curr] = min(min_depth_can_reach[curr], min_depth_can_reach[adj]);
+		}
+		else
+			min_depth_can_reach[curr] = min(min_depth_can_reach[curr], entry_depth[adj]);
 
 		if (min_depth_can_reach[adj] > depth) // bridge found
 			res.push_back(Edge(curr, adj));
@@ -87,11 +90,12 @@ int main() {
 		auto graph = Read(input);
 
 		vector<bool> visited(graph.size());
+		vector<int> entry_depth(graph.size());
 		vector<int> min_depth_can_reach(graph.size());
 		vector<Edge> res;
 		for (int i = 0; i < visited.size(); ++i)
 			if (!visited[i])
-				Solve(graph, i, -1, 0, visited, min_depth_can_reach, res);
+				Solve(graph, i, -1, 0, visited, min_depth_can_reach, entry_depth, res);
 
 		Write(res);
 		cout << endl;
