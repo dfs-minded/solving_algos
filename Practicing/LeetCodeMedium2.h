@@ -204,6 +204,30 @@ private:
 	}
 };
 
+bool searchMatrix(vector<vector<int>>& matrix, int target) {
+	if (matrix.empty() || matrix[0].empty()) 
+		return false;
+	if (target < matrix.front().front() || target > matrix.back().back()) 
+		return false;
+
+	int R = matrix.size();
+	int C = matrix[0].size();
+	int lo = 0;
+	int hi = R * C - 1;
+
+	while (hi - lo > 1) {
+		int mid = lo + (hi - lo) / 2;
+		int r = mid / C;
+		int c = mid % C;
+		if (matrix[r][c] < target) lo = mid;
+		else if (matrix[r][c] > target) hi = mid;
+		else return true;
+	}
+
+	return (matrix[lo / C][lo % C] == target) || 
+		   (matrix[hi / C][hi % C] == target);
+}
+
 int main() {
 
 	/*vector<int> input{ 1,2,1,2,6,7,5,1 };
@@ -244,10 +268,13 @@ int main() {
 	/*vector<int> input = { 2,3,6,7 };
 	auto res = combinationSum(input, 7);*/
 
-	MaxProfitSolution sln;
+	/*MaxProfitSolution sln;
 	vector<int> input = { 1,2,3,0,2 };
-	cout << sln.maxProfit(input);
-	
+	cout << sln.maxProfit(input);*/
+
+	/*vector<vector<int>> input = { {} };
+	cout << searchMatrix(input, 0);*/
+
 	cin.get();
 	return 0;
 }

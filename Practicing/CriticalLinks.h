@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <charconv>
 #include <vector>
@@ -10,27 +9,21 @@
 
 using namespace std;
 
-vector<vector<int>> Read(ifstream& input) {
-	vector<vector<int>> data;
+vector<vector<int>> Read(int N) {
+	vector<vector<int>> data(N);
 
-	if (input.is_open()) {
-		int N;
-		input >> N;
-		data.resize(N);
+	for (int i = 0; i < N; ++i) {
+		int vertex_id;
+		cin >> vertex_id;
 
-		for (int i = 0; i < N; ++i) {
-			int vertex_id;
-			input >> vertex_id;
+		string adj_vertices_count_str;
+		cin >> adj_vertices_count_str;
+		int adj_vertices_count = atoi(adj_vertices_count_str.c_str() + 1);
+		//from_chars(&adj_vertices_count_str[1], &adj_vertices_count_str.back(), adj_vertices_count);
+		data[vertex_id].resize(adj_vertices_count);
 
-			string adj_vertices_count_str;
-			input >> adj_vertices_count_str;
-			int adj_vertices_count = atoi(adj_vertices_count_str.c_str() + 1);
-			//from_chars(&adj_vertices_count_str[1], &adj_vertices_count_str.back(), adj_vertices_count);
-			data[vertex_id].resize(adj_vertices_count);
-
-			for (int j = 0; j < adj_vertices_count; ++j)
-				input >> data[vertex_id][j];
-		}
+		for (int j = 0; j < adj_vertices_count; ++j)
+			cin >> data[vertex_id][j];
 	}
 
 	return data;
@@ -45,6 +38,10 @@ struct Edge {
 	operator string() const noexcept {
 		return to_string(From) + " - " + to_string(To);
 	}
+
+	bool operator < (const Edge& other) const {
+		return From < other.From ? true : To < other.To;
+	}
 };
 
 ostream& operator << (ostream& stream, const Edge& e) {
@@ -52,7 +49,8 @@ ostream& operator << (ostream& stream, const Edge& e) {
 	return stream;
 };
 
-void Write(const vector<Edge>& res) {
+void Write(vector<Edge>& res) {
+	sort(res.begin(), res.end());
 	cout << res.size() << "  critical links" << endl;
 	for (auto e : res) cout << e << endl;
 }
@@ -69,25 +67,21 @@ void Solve(const vector<vector<int>>& graph, int curr, int parent, int depth,
 		if (!visited[adj]) {
 			Solve(graph, adj, curr, depth + 1, visited, min_depth_can_reach, entry_depth, res);
 			min_depth_can_reach[curr] = min(min_depth_can_reach[curr], min_depth_can_reach[adj]);
+
+			if (min_depth_can_reach[adj] > depth) // bridge found
+				res.push_back(Edge(curr, adj));
 		}
 		else
 			min_depth_can_reach[curr] = min(min_depth_can_reach[curr], entry_depth[adj]);
-
-		if (min_depth_can_reach[adj] > depth) // bridge found
-			res.push_back(Edge(curr, adj));
 	}
 }
 
 int main() {
-	ifstream input;
-	input.open("input.txt");
-
 	vector<vector<int>> data;
 
-	if (!input.is_open()) return 0;
-
-	while (!input.eof()) {
-		auto graph = Read(input);
+	int N;
+	while (cin >> N) {
+		auto graph = Read(N);
 
 		vector<bool> visited(graph.size());
 		vector<int> entry_depth(graph.size());
@@ -100,8 +94,6 @@ int main() {
 		Write(res);
 		cout << endl;
 	}
-
-	input.close();
 
 	int o; cin >> o;
 	return 0;

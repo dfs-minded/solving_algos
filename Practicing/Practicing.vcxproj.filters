@@ -143,5 +143,20 @@
     <ClInclude Include="CriticalLinks.h">
       <Filter>Header Files\OnlineJudge</Filter>
     </ClInclude>
+    <ClInclude Include="Trie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VasiliyMultiset.h">
+      <Filter>Header Files\CodeForces</Filter>
+    </ClInclude>
+    <ClInclude Include="NextPalindrome.h">
+      <Filter>Header Files\acmp.ru</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeMedium3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CyclesViaEdges.h">
+      <Filter>Header Files\IMSK</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

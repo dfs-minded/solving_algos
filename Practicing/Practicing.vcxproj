@@ -159,6 +159,7 @@
     <ClInclude Include="CodeWariors.h" />
     <ClInclude Include="CowsInHouses.h" />
     <ClInclude Include="CriticalLinks.h" />
+    <ClInclude Include="CyclesViaEdges.h" />
     <ClInclude Include="Diplomas.h" />
     <ClInclude Include="Divisibility.h" />
     <ClInclude Include="EditTheWord.h" />
@@ -175,8 +176,10 @@
     <ClInclude Include="LeetCodeHArd.h" />
     <ClInclude Include="LeetCodeMedium1.h" />
     <ClInclude Include="LeetCodeMedium2.h" />
+    <ClInclude Include="LeetCodeMedium3.h" />
     <ClInclude Include="LinkedLists.h" />
     <ClInclude Include="Nails.h" />
+    <ClInclude Include="NextPalindrome.h" />
     <ClInclude Include="NovelInVolumes.h" />
     <ClInclude Include="DP.h" />
     <ClInclude Include="PointsAndSegments.h" />
@@ -188,6 +191,8 @@
     <ClInclude Include="SwipeLine.h" />
     <ClInclude Include="Syntax.h" />
     <ClInclude Include="TheRest.h" />
+    <ClInclude Include="Trie.h" />
+    <ClInclude Include="VasiliyMultiset.h" />
     <ClInclude Include="VeryEasyTask.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
