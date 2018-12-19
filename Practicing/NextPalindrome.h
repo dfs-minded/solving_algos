@@ -6,12 +6,11 @@
 #include <utility>
 
 using namespace std;
-using ull = unsigned long long;
 
-ull Read() {
+string Read() {
 	ifstream input;
 	input.open("input.txt");
-	ull N = 0;
+	string N;
 
 	if (input.is_open()) {
 		input >> N;
@@ -29,10 +28,9 @@ void Write(string res) {
 	}
 }
 
-string Solve(ull x) {
-	if (x <= 9) return "11";
+string Solve(string x_str) {
+	if (x_str.length() == 1) return "11";
 
-	auto x_str = to_string(x);
 	auto mid = x_str.size() / 2;
 	auto l = mid - 1;
 	auto r = x_str.size() % 2 == 0 ? mid : mid + 1;

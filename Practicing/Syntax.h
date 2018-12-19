@@ -30,11 +30,13 @@ int main()
 
 	// 2. Reverse iterators
 
-	Print(autofilled.begin(), autofilled.end());
-	Print(autofilled.rbegin(), autofilled.rend());
+	//Print(autofilled.begin(), autofilled.end());
+	//Print(autofilled.rbegin(), autofilled.rend());
 
+	char t = static_cast<char>(48);
+	char t2 = static_cast<char>(1);
 
-	int i; cin >> i;
+	cin.get();
 	return 0;
 }
 

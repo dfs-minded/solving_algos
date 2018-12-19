@@ -1,17 +1,21 @@
-#pragma once
+#include <string>
+#include <iostream>
 
 #include "Trie.h"
 
+using namespace std;
+
 string To32String(int x) {
-	string res(32, '0');
-	for (int i = 0; i < 32; ++i, x /= 2)
-		res[31 - i] += (x & 1);
+	const int kSize = 32;
+	string res(kSize, '0');
+	for (int i = 0; i < kSize; ++i, x /= 2)
+		res[kSize - i - 1] += (x & 1);
 	return res;
 }
 
 int main() {
 	Trie<string, char> trie('*');
-	trie.Add("0");
+	trie.Add(To32String(0));
 
 	int n; cin >> n;
 
@@ -25,13 +29,12 @@ int main() {
 		case '+': trie.Add(x_str); break;
 		case '-': trie.Delete(x_str); break;
 		case '?': 
-			auto num_str = trie.BiggestXOR(x_str);
+			auto num_str = trie.BiggestXORNum(x_str);
 			auto num = stoi(num_str, nullptr, 2);
 			cout << (num ^ x) << endl;
 			break;
 		}
 	}
 
-	cin.get();
 	return 0;
 }
