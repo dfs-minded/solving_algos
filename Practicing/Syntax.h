@@ -33,8 +33,11 @@ int main()
 	//Print(autofilled.begin(), autofilled.end());
 	//Print(autofilled.rbegin(), autofilled.rend());
 
-	char t = static_cast<char>(48);
-	char t2 = static_cast<char>(1);
+	/*char t = static_cast<char>(48);
+	char t2 = static_cast<char>(1);*/
+
+	string s = "100[leetcode]";
+	int i = atoi(&s[0]);
 
 	cin.get();
 	return 0;

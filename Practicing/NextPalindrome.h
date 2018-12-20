@@ -28,6 +28,20 @@ void Write(string res) {
 	}
 }
 
+void PlusOne(string& input) {
+	const int kBase = 10;
+	int carry = 1;
+
+	for (int i = input.size() - 1; i >= 0; --i) {
+		int val = (input[i] - '0') + carry;
+		carry = val / kBase;
+		val %= kBase;
+		input[i] = '0' + val;
+	}
+
+	if (carry) input = '1' + input;
+ }
+
 string Solve(string x_str) {
 	if (x_str.length() == 1) return "11";
 
@@ -44,13 +58,11 @@ string Solve(string x_str) {
 	if (x_str.size() % 2) { // odd length
 		if (x_left_str_reversed <= x_right_str) {
 			x_left_str += x_str[mid];
-			auto num_to_increase = atoll(x_left_str.c_str());
-			++num_to_increase;
+			PlusOne(x_left_str);
 
-			auto res_left = to_string(num_to_increase);
-			auto res_right = res_left.substr(0, res_left.size() - 1);
+			auto res_right = x_left_str.substr(0, x_left_str.size() - 1);
 			reverse(res_right.begin(), res_right.end());
-			return res_left + res_right;
+			return x_left_str + res_right;
 		}
 
 		return x_left_str + x_str[mid] + x_left_str_reversed;
@@ -58,9 +70,8 @@ string Solve(string x_str) {
 		
 	// even length:
 	if (x_left_str_reversed <= x_right_str) {
-		auto left_x = atoll(x_left_str.c_str());
-		++left_x;
-		x_left_str = to_string(left_x);
+		PlusOne(x_left_str);
+
 		if (x_left_str.size() > x_right_str.size()) { // 9 + 1 = 10, got odd res length after incrementing
 			auto res_right = x_left_str.substr(0, x_left_str.size() - 1);
 			reverse(res_right.begin(), res_right.end());
