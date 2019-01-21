@@ -447,7 +447,7 @@ private:
 };
 
 
-vector<int> maxSumOfThreeSubarrays(vector<int>& nums, int k) {
+vector<int> maxSumOfThreeSubarraysOld(vector<int>& nums, int k) {
 	const int kSubArrsNum = 3;
 	// stores max sum we can get for each number of sub-arrays (<=3 for this task) ending at index i
 	vector<int> prev_dp(nums.size()), dp(nums.size()); 
@@ -493,6 +493,81 @@ vector<int> maxSumOfThreeSubarrays(vector<int>& nums, int k) {
 	res[0] = best_index;
 
 	return res;
+}
+
+vector<int> maxSumOfThreeSubarrays(const vector<int>& nums, int k) {
+	const int kSubarraysNumber = 3;
+	vector<vector<int>> max_sum_on_prefix(kSubarraysNumber, vector<int>(nums.size()));
+	vector<vector<int>> best_subarr_last_index(kSubarraysNumber, vector<int>(nums.size(), -1));
+
+	vector<int> prefix_sums(nums.size() + 1);
+	for (int i = 1; i < prefix_sums.size(); ++i)
+		prefix_sums[i] += prefix_sums[i - 1] + nums[i - 1];
+
+	// fill dp for the first subarray
+	for (int i = k - 1; i < nums.size(); ++i) {
+		best_subarr_last_index[0][i] = best_subarr_last_index[0][i - 1];
+		max_sum_on_prefix[0][i] = max_sum_on_prefix[0][i - 1];
+
+		int curr_sum = prefix_sums[i + 1] - prefix_sums[i - k + 1];
+		if (curr_sum > max_sum_on_prefix[0][i]) {
+			max_sum_on_prefix[0][i] = curr_sum;
+			best_subarr_last_index[0][i] = i;
+		}
+	}
+
+	// fill dp for the second and the third subarrays
+	for (int j = 1; j < kSubarraysNumber; ++j) {
+		for (int i = (j + 1)*k - 1; i < nums.size(); ++i) {
+			max_sum_on_prefix[j][i] = max_sum_on_prefix[j][i - 1];
+			best_subarr_last_index[j][i] = best_subarr_last_index[j][i - 1]; // index got on prev step
+
+			int curr_sum = prefix_sums[i + 1] - prefix_sums[i - k + 1];
+
+			int curr_sub_arr_is_second_sum = max_sum_on_prefix[j - 1][i - k] + curr_sum;
+			if (curr_sub_arr_is_second_sum > max_sum_on_prefix[j][i]) {
+				max_sum_on_prefix[j][i] = curr_sub_arr_is_second_sum;
+				best_subarr_last_index[j][i] = i;
+			}
+
+			if (i - 2 * k >= 0) {
+				int curr_sub_arr_is_third_sum = max_sum_on_prefix[j - 1][i - 2 * k] + curr_sum;
+				if (curr_sub_arr_is_second_sum > max_sum_on_prefix[j][i]) {
+					max_sum_on_prefix[j][i] = curr_sub_arr_is_third_sum;
+					best_subarr_last_index[j][i] = i;
+				}
+			}
+		}
+	}
+
+	vector<int> res(3);
+	res[2] = best_subarr_last_index.back().back() - k + 1;
+	res[1] = best_subarr_last_index[1][res[2] - 1] - k + 1;
+	res[0] = best_subarr_last_index[0][res[1] - 1] - k + 1;
+	return res;
+}
+
+
+int minDistance(const string& source, const string& target) {
+	int N = source.size();
+	int M = target.size();
+	vector<int> min_cost_curr_dp(M + 1);
+	auto min_cost_prev_dp = min_cost_curr_dp;
+	iota(min_cost_prev_dp.begin(), min_cost_prev_dp.end(), 0);
+
+	for (int i = 1; i <= N; ++i) {
+		min_cost_curr_dp[0] = i;
+		for (int j = 1; j <= M; ++j) {
+			int replace_cost = (source[i - 1] == target[j - 1]) ? 0 : 1;
+			min_cost_curr_dp[j] = min({
+				min_cost_curr_dp[j - 1] + 1, // insert
+				min_cost_prev_dp[j - 1] + replace_cost, // replace
+				min_cost_prev_dp[j] + 1 }); // delete
+		}
+		swap(min_cost_prev_dp, min_cost_curr_dp);
+	}
+
+	return min_cost_prev_dp.back();
 }
 
 int main() {
@@ -542,8 +617,13 @@ int main() {
 	vector<vector<int>> input = { {6,23,16,13,7},{8,19,14,2,18},{0,22,17,21,9},{12,1,10,24,4},{5,20,3,11,15} };
 	cout << s.swimInWater(input);*/
 
-	vector<int> input = { 1,2,1,2,6,7,5,1 };
-	auto res = maxSumOfThreeSubarrays(input, 2);
+	/*vector<int> input = { 1,2,1,2,6,7,5,1 };
+	auto res = maxSumOfThreeSubarrays(input, 2);*/
 
-	int o; cin >> o;
+	string s1 = "horse";
+	string s2 = "ros";
+	cout << minDistance(s1, s2);
+
+	cin.get();
+	return 0;
 }

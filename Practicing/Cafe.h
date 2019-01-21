@@ -39,45 +39,53 @@ void Write(tuple<int, int, int> res) {
 	}
 }
 
-tuple<int, int, int> Solve(vector<int> values) {
-	const int kMinPromotionPrice = 100;
-	int N = values.size();
-	// days(rows) / coupons left on a specific day (cols)
-	vector<vector<long long>> memo(N, vector<long long>(N + 1, numeric_limits<int>::max()));
-	memo[0][0] = values[0];
-	int max_coupons = 0;
-	if (values[0] >= kMinPromotionPrice) {
-		memo[0][1] = values[0];
-		++max_coupons;
-	}
+tuple<int, int, int> Solve(vector<int> prices) {
+	const int kMinPromotionPrice = 101;
+	int N = prices.size();
+	vector<long long> min_price_can_get_curr(N + 1, numeric_limits<int>::max());
+	auto min_price_can_get_prev = min_price_can_get_curr;
+	vector<int> coupons_used(N + 1);
+
+	min_price_can_get_prev[0] = prices[0];
+
+	if (prices[0] >= kMinPromotionPrice)
+		min_price_can_get_prev[1] = prices[0];
 
 	for (int day = 1; day < N; ++day) {
-		if (values[day] >= kMinPromotionPrice) ++max_coupons;
-		
-		for (int coupons = max_coupons; coupons >= 0; --coupons) {
+		for (int coupons = 0; coupons <= N; ++coupons) {
+			// buy today
+			auto curr_price = min_price_can_get_prev[coupons] + prices[day];
+			min_price_can_get_curr[coupons] = min(min_price_can_get_curr[coupons], curr_price);
 
-			// Calc without current coupon, even if we can get it.
-			// Min if we do not use a coupon from prev day and if we use.
-			memo[day][coupons] = min(memo[day - 1][coupons + 1], values[day] + memo[day - 1][coupons]);
+			// if we can and we get better price, use coupon from prev day
+			if (coupons < N && min_price_can_get_prev[coupons + 1] < min_price_can_get_curr[coupons]) {
+				min_price_can_get_curr[coupons] = min_price_can_get_prev[coupons + 1];
+				coupons_used[coupons] = coupons_used[coupons + 1] + 1;
+			}
 
-			// if we get new coupon
-			if (values[day] >= kMinPromotionPrice && coupons > 0) {
-				// Min from what we have already calculated and if we take advantage of todays coupon.
-				memo[day][coupons] = min(memo[day][coupons], values[day] + memo[day - 1][coupons - 1]);
+			if (prices[day] >= kMinPromotionPrice && coupons > 0) {
+				auto price = min_price_can_get_prev[coupons - 1] + prices[day];
+				if (price < min_price_can_get_curr[coupons]) {
+					min_price_can_get_curr[coupons] = price;
+					coupons_used[coupons] = coupons_used[coupons - 1] + 1;
+				}
 			}
 		}
+
+		swap(min_price_can_get_curr, min_price_can_get_prev);
+		min_price_can_get_curr = vector<long long>(N + 1, numeric_limits<int>::max());
 	}
-	
-	auto min_price = memo.back()[0];
+
+	auto min_price = min_price_can_get_prev[0];
 	int coupons_left = 0;
-	for (int i = 1; i <= max_coupons; ++i) {
-		if (memo.back()[i] < min_price) {
+	for (int i = 1; i <= N; ++i) {
+		if (min_price_can_get_prev[i] < min_price) {
 			coupons_left = i;
-			min_price = memo.back()[i];
+			min_price = min_price_can_get_prev[i];
 		}
 	}
-	
-	return { memo.back()[coupons_left], coupons_left, max_coupons - coupons_left };
+
+	return { min_price_can_get_prev[coupons_left], coupons_left, coupons_used[coupons_left] };
 }
 
 int main() {

@@ -12,10 +12,18 @@ using namespace std;
 struct Segment {
 	int Start;
 	int End;
-	int Value;
+	int Score;
+	int ID;
 
-	Segment(int start, int end, int value) : Start(start), End(end), Value(value) {};
+	Segment(int start, int end, int score, int id) : Start(start), End(end), Score(score), ID(id) {};
+
+	bool operator < (const Segment& other) {
+		return End == other.End ? Score > other.Score : End < other.End;
+	}
 };
+
+auto LowerBoundPred = [](const Segment& s, int val) { return s.End < val; };
+
 
 vector<Segment> Read() {
 	ifstream input;
@@ -29,11 +37,12 @@ vector<Segment> Read() {
 			int start; input >> start;
 			int duration; input >> duration;
 			int value; input >> value;
-			data.push_back(Segment(start, start + duration, value));
+			data.push_back(Segment(start, start + duration, value, i + 1));
 		}
 
 		input.close();
 	}
+
 	return data;
 }
 
@@ -44,54 +53,64 @@ void Write(int max_val, vector<int> res) {
 		output << max_val << endl;
 		output << res.size() << endl;
 		for (int i = 0; i < res.size(); ++i)
-			output << res[i] + 1 << " ";
+			output << res[i] << " ";
 
 		output.close();
 	}
 }
 
-pair<int, vector<int>> Solve(vector<Segment>& segments) {
-	auto cmp = [](const Segment& lhs, const Segment& rhs) { return lhs.End < rhs.End; };
-	sort(segments.begin(), segments.end(), cmp);
+int NearestCanTake(const vector<Segment>& segments, int i) {
+	int val = segments[i].Start;
+	auto greater_or_eq_end_iter = lower_bound(segments.begin(), segments.end(), val, LowerBoundPred);
 
-	vector<pair<int, int>> max_can_get_dp(segments.size()); // sum to the index of the prev element taken 
-	max_can_get_dp[0] = { segments[0].Value, -1 };
+	if (greater_or_eq_end_iter == segments.begin())
+		return greater_or_eq_end_iter->End > val ? -1 : 0;
+	
+	int dist = distance(segments.begin(), greater_or_eq_end_iter);
+	return (greater_or_eq_end_iter->End == val) ? dist : dist - 1;
+}
+
+pair<int, vector<int>> Solve(vector<Segment>& segments) {
+	vector<int> max_scores_dp(segments.size());
+	max_scores_dp[0] = segments[0].Score;
+
+	vector<int> last_segment_index(segments.size(), -1);
+	last_segment_index[0] = 0;
+
+	sort(segments.begin(), segments.end());
 
 	for (int i = 1; i < segments.size(); ++i) {
-		// don not include curr segment:
-		max_can_get_dp[i] = max_can_get_dp[i - 1]; 
+		int index = NearestCanTake(segments, i);
+		int prev_ma_score = (index == -1) ? 0 : max_scores_dp[index];
+		
+		// do not take curr segment:
+		max_scores_dp[i] = max_scores_dp[i - 1];
+		last_segment_index[i] = last_segment_index[i - 1];
 
-		// include curr segment:
-		auto include_curr_segment_sum = segments[i].Value;
-		int prev_segment_index = -1;
-		
-		auto pred = []( const Segment& s, const int& start) { 
-			return s.End < start; 
-		};
-		auto first_can_take_iter = lower_bound(segments.begin(), segments.begin() + i + 1, segments[i].Start, pred);
-		
-		if (first_can_take_iter != segments.begin() + i && first_can_take_iter->End <= segments[i].Start) {
-			include_curr_segment_sum += first_can_take_iter->Value;
-			prev_segment_index = distance(segments.begin(), first_can_take_iter);
+		// take curr segment:
+		if (prev_ma_score + segments[i].Score > max_scores_dp[i]) {
+			max_scores_dp[i] = prev_ma_score + segments[i].Score;
+			last_segment_index[i] = i;
 		}
-
-		if (include_curr_segment_sum > max_can_get_dp[i].first)
-			max_can_get_dp[i] = { include_curr_segment_sum, prev_segment_index };
 	}
 
-	// compose the answer:
-	auto max_res_index = distance(max_can_get_dp.begin(), max_element(max_can_get_dp.begin(), max_can_get_dp.end()));
-	int max_sum = max_can_get_dp[max_res_index].first;
-	
-	vector<int> res;
-	int prev = max_res_index;
-	while (prev != -1) {
-		res.push_back(prev);
-		prev = max_can_get_dp[prev].second;
+	vector<int> task_ids;
+	int last_task_index = last_segment_index.back();
+
+	while (true) {
+		task_ids.push_back(segments[last_task_index].ID);
+		auto val = max_scores_dp[last_task_index] - segments[last_task_index].Score;
+		if (val == 0) break;
+
+		auto prev_segm_iter = lower_bound(segments.begin(), segments.begin() + last_task_index + 1, 
+											val, LowerBoundPred);
+
+		last_task_index = distance(segments.begin(), prev_segm_iter);
 	}
 
-	reverse(res.begin(), res.end());
-	return { max_sum, res };
+	reverse(task_ids.begin(), task_ids.end());
+
+	return { max_scores_dp.back(), task_ids };
 }
 
 int main() {
