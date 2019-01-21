@@ -159,6 +159,7 @@ string minWindow(string s, string t) {
 	return (best_left == -1) ? "" : s.substr(best_left, best_right - best_left);
 }
 
+
 double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
 	if (nums1.empty() || nums2.empty()) {
 		if (nums1.empty()) swap(nums1, nums2);
@@ -166,47 +167,56 @@ double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
 		return (nums1.size() % 2 == 0) ? (nums1[median_index] + nums1[median_index + 1]) / 2.0 :
 			nums1[median_index];
 	}
-
-	// search for position of elements from the second array in the first one.
-	if (nums2.back() > nums1.back()) swap(nums1, nums2);
-
+	
 	auto merged_size = nums1.size() + nums2.size();
-	auto median_index = (merged_size - 1) / 2;
+	int median_index = (merged_size - 1) / 2;
+	double median = 0;
+	int first_arr_median_index = -1;
 
-	int lo = 0, hi = nums2.size() - 1;
+	int lo = 0, hi = nums1.size() - 1;
 	while (lo <= hi) {
 		int mid = lo + (hi - lo) / 2;
-		auto iters_pair = equal_range(nums1.begin(), nums1.end(), nums2[mid]);
-		auto insertion_pos_lo = distance(nums1.begin(), iters_pair.first);
-		auto merged_index_lo = mid + insertion_pos_lo;
+		auto iters_pair = equal_range(nums2.begin(), nums2.end(), nums1[mid]);
+		auto lo_index = distance(nums2.begin(), iters_pair.first);
+		auto hi_index = distance(nums2.begin(), iters_pair.second);
 
-		if (merged_index_lo > median_index) {
+		if (lo_index + mid > median_index + 1) { // we do not know we found first or second element of the median
 			hi = mid - 1;
 			continue;
 		}
 
-		auto insertion_pos_hi = distance(nums1.begin(), iters_pair.second);
-		auto merged_index_hi = mid + insertion_pos_hi;
-
-		if (merged_index_hi < median_index) {
+		if (hi_index + mid < median_index + 1) {
 			lo = mid + 1;
 			continue;
 		}
 
-		// merged_index_lo <= median_indx <= merged_index_hi
-		if (merged_size % 2 != 0) return nums2[mid];
-		double median = nums2[mid];
-		int other = (iters_pair.first == iters_pair.second ? *(iters_pair.first) : *(++iters_pair.first));
-		median += min(other,
-			(mid + 1 < nums2.size()) ? nums2[mid + 1] : numeric_limits<int>::max());
+		// median_index is between found indexes
+		if (merged_size % 2 != 0) return nums1[mid];
 
-		return median / 2.0;
+		if (median == 0) { // search for the second element
+			median = nums1[mid];
+			first_arr_median_index = mid;
+			lo = 0;
+			hi = nums1.size() - 1;
+			// if found first element of the median
+			if (lo_index + mid > median_index && hi_index + mid < median_index)
+				++median_index;
+			else --median;
+		} else {
+			median = (median + nums1[mid]) / 2.0;
+			return median;
+		}
+	}
+	// did not found either one or both elements in the first array
+
+	if (median == 0) { // both not found
+		median_index = (hi == -1) ? median_index : (nums2.size() - 1) / 2;
+
+		return (merged_size % 2 != 0) ? nums2[median_index] 
+			: (nums2[median_index] + nums2[median_index + 1]) / 2.0;
 	}
 
-	// median is in the first array, either after the place, where to the second arr is merged or before.
-	median_index = median_index - (hi == -1 ? 0 : nums2.size());
-	return (merged_size % 2 == 0) ? (nums1[median_index] + nums1[median_index + 1]) / 2.0 :
-		nums1[median_index];
+	return (median + nums2[median_index - (first_arr_median_index + 1)]) / 2.0;
 }
 
 int main() {
@@ -230,8 +240,24 @@ int main() {
 
 	//vector<int> n1 = { 1, 1, 2 };
 	//vector<int> n2 = { 3, 3, 3, 4 };
-	vector<int> n1 = {1,2,4 };
-	vector<int> n2 = { 3 };
+
+	//vector<int> n1 = {1,2,4 };
+	//vector<int> n2 = { 3 };
+
+	//vector<int> n1 = { };
+	//vector<int> n2 = { 3 };
+
+	vector<int> n1 = { 20 };
+	vector<int> n2 = { 10 };
+
+	//vector<int> n1 = { 3 };
+	//vector<int> n2 = { 1,2,3,4 };
+
+	//vector<int> n1 = { 1,2};
+	//vector<int> n2 = { 3,4 };
+
+	/*vector<int> n1 = { 1,3 };
+	vector<int> n2 = { 2 };*/
 	cout << findMedianSortedArrays(n1, n2);
 
 	/*BurstingBaloonsSolution sln;
