@@ -28,6 +28,9 @@
     <Filter Include="Header Files\Informatics">
       <UniqueIdentifier>{9b0a198b-5e1f-4e6b-ad53-643b5bedb8b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\LeetCode">
+      <UniqueIdentifier>{2212fe13-e86a-4354-8b86-6d4238c0357d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Practicing.cpp">
@@ -35,9 +38,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LeetCodeEasy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="StdHeaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -86,9 +86,6 @@
     <ClInclude Include="ApproximationOfConstantRange.h">
       <Filter>Header Files\CodeForces</Filter>
     </ClInclude>
-    <ClInclude Include="LeetCodeHArd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Farmer1.h">
       <Filter>Header Files\acmp.ru</Filter>
     </ClInclude>
@@ -102,12 +99,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SwipeLine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LeetCodeMedium1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LeetCodeMedium2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Divisibility.h">
@@ -139,9 +130,6 @@
     </ClInclude>
     <ClInclude Include="NextPalindrome.h">
       <Filter>Header Files\acmp.ru</Filter>
-    </ClInclude>
-    <ClInclude Include="LeetCodeMedium3.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CyclesViaEdges.h">
       <Filter>Header Files\Informatics</Filter>
@@ -191,12 +179,6 @@
     <ClInclude Include="TaniaAndPassword.h">
       <Filter>Header Files\CodeForces</Filter>
     </ClInclude>
-    <ClInclude Include="LeetCodeMedium4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LeetCodeHard2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Message.h">
       <Filter>Header Files\Informatics</Filter>
     </ClInclude>
@@ -214,6 +196,72 @@
     </ClInclude>
     <ClInclude Include="Cubics.h">
       <Filter>Header Files\Informatics</Filter>
+    </ClInclude>
+    <ClInclude Include="LruCache.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="SumOfDistancesInTree.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="MaxSumFrames.h">
+      <Filter>Header Files\Informatics</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeHard3.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeHard2.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeHArd.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeEasy.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeMedium1.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeMedium2.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeMedium3.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeMedium4.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeMedium5.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="DesignTwitter.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="ReverseNodesInKGroup.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="TowerOfHanoi.h">
+      <Filter>Header Files\Informatics</Filter>
+    </ClInclude>
+    <ClInclude Include="SuperMinimum.h">
+      <Filter>Header Files\Informatics</Filter>
+    </ClInclude>
+    <ClInclude Include="MutableRangeSumQuery.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="DestroyingAHotel.h">
+      <Filter>Header Files\CodeForces</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeHard4.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeHard5.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="SegmentTree.h">
+      <Filter>Header Files\LeetCode</Filter>
+    </ClInclude>
+    <ClInclude Include="LeetCodeMedium6.h">
+      <Filter>Header Files\LeetCode</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

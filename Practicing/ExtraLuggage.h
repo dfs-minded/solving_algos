@@ -46,7 +46,7 @@ pair<ull, ull> Sum(const vector<ull>& weight, const vector<ull>& cost, int mask,
 	return { weight_sum, cost_sum };
 }
 
-int Solve(ull M, const vector<ull>& weight, const vector<ull>& cost) {
+ull Solve(ull M, const vector<ull>& weight, const vector<ull>& cost) {
 	ull max_weight = accumulate(weight.begin(), weight.end(), 0ull) - M;
 
 	int N = weight.size();

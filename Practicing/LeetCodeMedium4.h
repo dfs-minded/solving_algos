@@ -143,6 +143,226 @@ int widthOfBinaryTree(TreeNode* root) {
 	return max_dist;
 }
 
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+		int nodes_found = 0;
+		return LCA(root, p, q, nodes_found);
+	}
+private:
+	TreeNode* LCA(TreeNode* curr, TreeNode* p, TreeNode* q, int& num_nodes_found) {
+		if (!curr) return nullptr;
+
+		int nodes_found_left = 0;
+		auto* left = LCA(curr->left, p, q, nodes_found_left);
+		if (nodes_found_left == 2) {
+			num_nodes_found = 2;
+			return left;
+		}
+
+		int nodes_found_right = 0;
+		auto* right = LCA(curr->right, p, q, nodes_found_right);
+		if (nodes_found_right == 2) {
+			num_nodes_found = 2;
+			return right;
+		}
+
+		num_nodes_found = nodes_found_left + nodes_found_right;
+		if (curr->val == p->val || curr->val == q->val) ++num_nodes_found;
+
+		if (num_nodes_found == 2) return curr;
+
+		return nullptr;
+	}
+};
+ 
+class LCASolution {
+public:
+	TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+		bool p_or_q_found = false;
+		return LCA(root, p, q, p_or_q_found);
+	}
+private:
+	TreeNode* LCA(TreeNode* node, TreeNode* p, TreeNode* q, bool& p_or_q_found) {
+		if (!node) return nullptr;
+
+		bool p_or_q_found_left = false;
+		auto* left = LCA(node->left, p, q, p_or_q_found_left);
+		if (left) return left;
+
+		bool p_or_q_found_right = false;
+		auto* right = LCA(node->right, p, q, p_or_q_found_right);
+		if (right) return right;
+
+		if (node == p || node == q) p_or_q_found = true;
+
+		if ((p_or_q_found_left && p_or_q_found_right) ||
+			(p_or_q_found && (p_or_q_found_left || p_or_q_found_right)))
+			return node; // node is lca
+
+
+		p_or_q_found = p_or_q_found || p_or_q_found_left || p_or_q_found_right;
+		return nullptr;
+	}
+};
+
+int compress(vector<char>& chars) {
+	int j = 0;
+	int count = 0;
+	char last = chars[0];
+
+	for (int i = 0; i < chars.size(); ++i) {
+		if (chars[i] == last) {
+			++count;
+			continue;
+		}
+
+		chars[j++] = last;
+		last = chars[i];
+		if (count > 1) {
+			auto count_str = to_string(count);
+			for (auto c : count_str) chars[j++] = c;
+		}
+		count = 1;
+	}
+	
+	chars[j++] = last;
+	if (count > 1) {
+		auto count_str = to_string(count);
+		for (auto c : count_str) chars[j++] = c;
+	}
+
+	return j;
+}
+
+int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+	int N = gas.size();
+	int start = 0;
+	int end = 0;
+	int curr_tank = gas[start];
+
+	while (start < N) {
+
+		while (curr_tank >= cost[end]) {
+			curr_tank -= cost[end];
+
+			end = (end + 1) % N;
+			curr_tank += gas[end];
+
+			if (end == start) return start;
+		}
+
+		if (end != start) {
+			curr_tank -= gas[start];
+			curr_tank += cost[start];
+			++start;
+		}
+		else {
+			++start;
+			end = start;
+			curr_tank = gas[start];
+		}
+	}
+
+	return -1;
+}
+
+class WordSearchSolution {
+public:
+	bool exist(vector<vector<char>>& board, string word) {
+		for (int r = 0; r < board.size(); ++r)
+			for (int c = 0; c < board[0].size(); ++c) {
+				if (board[r][c] != word[0]) continue;
+				board[r][c] = kUsedMarker;
+
+				if (SearchWordDfs(board, { r, c }, word, 1))
+					return true;
+
+				board[r][c] = word[0];
+			}
+
+		return false;
+	}
+private:
+	const vector<int> kDx = { 0, 1, 0, -1 };
+	const vector<int> kDy = { 1, 0, -1, 0 };
+	const char kUsedMarker = '*';
+
+	bool SearchWordDfs(vector<vector<char>>& board, pair<int, int> pos,
+		 const string& word, int d) {
+		if (d == word.length()) return true;
+		auto[r, c] = pos;
+
+		for (int i = 0; i < kDx.size(); ++i) {
+			int next_r = r + kDy[i];
+			int next_c = c + kDx[i];
+
+			if (next_r < 0 || next_r == board.size() ||
+				next_c < 0 || next_c == board[0].size()) continue;
+
+			if (board[next_r][next_c] == word[d]) {
+				board[next_r][next_c] = kUsedMarker;
+
+				if (SearchWordDfs(board, { next_r, next_c }, word, d + 1))
+					return true;
+
+				board[next_r][next_c] = word[d];
+			}
+		}
+
+		return false;
+	}
+};
+
+class LifeSolution {
+public:
+	void gameOfLife(vector<vector<int>>& board) {
+		if (board.empty()) return;
+
+		constexpr array<int, 8> dx{ 0, 1, 1, 1, 0, -1, -1, -1 };
+		constexpr array<int, 8> dy{ 1, 1, 0, -1, -1, -1, 0, 1 };
+		constexpr int kWasOneMarker = 2; // and became 0
+		constexpr int kWasZeroMarker = 3; // and became 1
+
+		for (int r = 0; r < board.size(); ++r) {
+			for (int c = 0; c < board[0].size(); ++c) {
+				int live_adj = 0;
+
+				for (int i = 0; i < dx.size(); ++i) {
+					int adj_r = r + dy[i];
+					int adj_c = c + dx[i];
+					if (adj_r < 0 || adj_r == board.size() || adj_c < 0 || adj_c == board[0].size())
+						continue;
+					if (board[adj_r][adj_c] == 1 || board[adj_r][adj_c] == kWasOneMarker)
+						++live_adj;
+				}
+
+				if (live_adj < 2 || live_adj > 3)
+					board[r][c] = board[r][c] == 1 ? kWasOneMarker : 0;
+				else if (live_adj == 3)
+					board[r][c] = board[r][c] == 0 ? kWasZeroMarker : 1;
+			}
+		}
+
+		for (int r = 0; r < board.size(); ++r) {
+			for (int c = 0; c < board[0].size(); ++c) {
+				if (board[r][c] == kWasOneMarker) board[r][c] = 0;
+				else if (board[r][c] == kWasZeroMarker) board[r][c] = 1;
+			}
+		}
+	}
+};
+
 int main() {
 	/*NextPermutationSolution sln;
 	vector<int> nums{2,3,1};
@@ -151,8 +371,42 @@ int main() {
 	/*vector<int> input{ -1,0,1,2,-1,-4 };
 	auto res = threeSumV2(input);*/
 
-	vector<int> input{ 100,4,200,1,3,2 };
-	int res = longestConsecutive(input);
+	/*vector<int> input{ 100,4,200,1,3,2 };
+	int res = longestConsecutive(input);*/
+
+	/*LCASolution sln;
+	auto* n0 = new TreeNode(0);
+	auto* n1 = new TreeNode(1);
+	auto* n2 = new TreeNode(2);
+	auto* n3 = new TreeNode(3);
+	auto* n4 = new TreeNode(4);
+	auto* n5 = new TreeNode(5);
+	auto* n6 = new TreeNode(6);
+	auto* n7 = new TreeNode(7);
+	auto* n8 = new TreeNode(8);
+
+	n3->left = n5;
+	n5->left = n6;
+	n5->right = n2;
+	n2->left = n7;
+	n2->right = n4;
+
+	cout << sln.lowestCommonAncestor(n3, n5, n4)->val;*/
+
+	//vector<char> input { 'a','b','c' };
+	/*vector<char> input { 'a','a','b','b','c','c','c' };
+	auto res = compress(input);*/
+	/*vector<int> gas{ 1,2,3,4,5 };
+	vector<int> cost{3,4,5,1,2};
+	cout << canCompleteCircuit(gas, cost);*/
+
+	/*vector<vector<char>> board{ {'A', 'B', 'C', 'E'}, {'S', 'F', 'C', 'S'}, {'A', 'D', 'E', 'E'} };
+	WordSearchSolution sln;
+	cout << sln.exist(board, "ABCCED");*/
+
+	LifeSolution sln;
+	vector<vector<int>> board{ {0,1,0},{0,0,1},{1,1,1},{0,0,0} };
+	sln.gameOfLife(board);
 
 	cin.get();
 	return 0;

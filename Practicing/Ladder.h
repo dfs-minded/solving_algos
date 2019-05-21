@@ -28,30 +28,26 @@ void Write(ull res) {
 	}
 }
 
-// Explanation:
-// Let for example N == 8. For level 1 there are options from 8 to 4. On the top of every of this levels,
-// we can put the rest of 8-8=0 bricks, 8-7=1 brick, 8-6=2 bricks, 8-5=3 bricks, 8-4=4 bricks, 
-// which corresponds to solutions for N == 0, N == 1, ..., N == 4 respectively. For the last level for even
-// N we need to subtract 1 for the base equal to N/2 (but all other options are possible).
 ull Solve(int N) {
 	if (N == 0) return 0;
-	vector<ull> combinations_num(N + 1);
-	combinations_num[0] = combinations_num[1] = 1;
+	++N;
 
-	for (int n = 2; n <= N; ++n) {
-		ull curr_num = 0;
-		
-		for (int i = 0; i <= n / 2; ++i)
-			curr_num += combinations_num[i];
+	// dp[i][j] : num ways to build a ladder using j cubics
+	// i - length of the curr level, 
+	// j - number of cubics used
+	vector<vector<ull>> dp(N, vector<ull>(N));
+	for (int i = 0; i < N; ++i)
+		dp[i][i] = 1;
 
-		// for the even number with last combination base == N/2, we can take combinations_num[N/2] only with bases < N/2.
-		// therefore minus one base from the last combination
-		if (n % 2 == 0) curr_num -= 1;
-		
-		combinations_num[n] = curr_num;
-	}
-
-	return combinations_num.back();
+	for (int j = 1; j < N; ++j) // used
+		for (int i = 1; i <= j; ++i) // last level	
+			for (int k = 1; k <= min(i - 1, N - j - 1); ++k) // next level length
+				dp[k][j + k] += dp[i][j];
+	
+	ull res = 0;
+	for (int i = 1; i < N; ++i)
+		res += dp[i].back();
+	return res;
 }
 
 int main() {
